@@ -472,12 +472,12 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
         >
             <div>
                 <p
-                    class="text-xs font-semibold tracking-[0.2em] text-sky-600 uppercase"
+                    class="text-xs font-semibold tracking-[0.2em] text-teal-600 uppercase"
                 >
                     Fragebogen-Builder
                 </p>
                 <h1
-                    class="mt-2 text-3xl font-semibold tracking-tight text-slate-950"
+                    class="mt-2 text-3xl font-semibold tracking-tight text-slate-900"
                 >
                     Fragebögen aus Modulen zusammenstellen
                 </h1>
@@ -491,13 +491,13 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
             <div class="flex flex-wrap gap-3">
                 <Link
                     :href="questionEditor()"
-                    class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:text-sky-700"
+                    class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-200 hover:text-teal-700"
                 >
                     Module bearbeiten
                 </Link>
                 <Link
                     :href="resourceIndex('frageboegen')"
-                    class="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+                    class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
                 >
                     Vorlagen verwalten
                 </Link>
@@ -522,7 +522,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                 <section
                     class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
-                    <h2 class="font-semibold text-slate-950">Neue Vorlage</h2>
+                    <h2 class="font-semibold text-slate-900">Neue Vorlage</h2>
                     <form
                         class="mt-4 space-y-3"
                         @submit.prevent="createTemplate"
@@ -536,7 +536,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                             <input
                                 v-model="templateForm.name"
                                 required
-                                class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                                 placeholder="Kursbewertung"
                             />
                         </label>
@@ -549,13 +549,13 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                             <textarea
                                 v-model="templateForm.description"
                                 rows="3"
-                                class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                             />
                         </label>
                         <button
                             type="submit"
                             :disabled="templateForm.processing"
-                            class="h-11 w-full rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                            class="h-11 w-full rounded-xl bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             Vorlage anlegen
                         </button>
@@ -566,7 +566,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                     class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
                 >
                     <div class="border-b border-slate-200 px-5 py-4">
-                        <h2 class="font-semibold text-slate-950">Vorlagen</h2>
+                        <h2 class="font-semibold text-slate-900">Vorlagen</h2>
                         <p class="mt-1 text-sm text-slate-500">
                             Wählen Sie eine Vorlage und danach eine Version.
                         </p>
@@ -579,7 +579,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                             class="w-full rounded-xl px-3 py-3 text-left transition"
                             :class="
                                 selectedTemplateId === template.id
-                                    ? 'bg-sky-50 text-sky-900'
+                                    ? 'bg-teal-50 text-teal-900'
                                     : 'hover:bg-slate-50'
                             "
                             @click="selectedTemplateId = template.id"
@@ -618,12 +618,12 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                         >
                             <div>
                                 <p
-                                    class="text-xs font-semibold tracking-[0.18em] text-sky-600 uppercase"
+                                    class="text-xs font-semibold tracking-[0.18em] text-teal-600 uppercase"
                                 >
                                     Vorlage
                                 </p>
                                 <h2
-                                    class="mt-1 text-2xl font-semibold text-slate-950"
+                                    class="mt-1 text-2xl font-semibold text-slate-900"
                                 >
                                     {{ selectedTemplate.name }}
                                 </h2>
@@ -637,7 +637,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
 
                             <button
                                 type="button"
-                                class="rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                class="rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
                                 :disabled="versionForm.processing"
                                 @click="createDraftVersion"
                             >
@@ -656,8 +656,8 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                 class="rounded-full border px-3 py-1.5 text-sm font-medium transition"
                                 :class="
                                     selectedVersionId === version.id
-                                        ? 'border-sky-300 bg-sky-50 text-sky-700'
-                                        : 'border-slate-200 text-slate-600 hover:border-sky-200 hover:text-sky-700'
+                                        ? 'border-teal-300 bg-teal-50 text-teal-700'
+                                        : 'border-slate-200 text-slate-600 hover:border-teal-200 hover:text-teal-700'
                                 "
                                 @click="selectedVersionId = version.id"
                             >
@@ -701,7 +701,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         }}
                                     </span>
                                     <h2
-                                        class="mt-3 text-xl font-semibold text-slate-950"
+                                        class="mt-3 text-xl font-semibold text-slate-900"
                                     >
                                         Version
                                         {{ selectedVersion.version_number }}
@@ -733,7 +733,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
 
                             <div
                                 v-if="!isDraft"
-                                class="mt-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
+                                class="mt-5 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800"
                             >
                                 Veröffentlichte Versionen sind gesperrt. Für
                                 Änderungen erstellen Sie eine neue
@@ -754,7 +754,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         v-model="versionForm.title"
                                         :disabled="!isDraft"
                                         required
-                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-50 disabled:text-slate-500"
+                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>
                                 <label class="block lg:col-span-2">
@@ -767,7 +767,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         v-model="versionForm.description"
                                         :disabled="!isDraft"
                                         rows="3"
-                                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-50 disabled:text-slate-500"
+                                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>
                                 <label class="block">
@@ -781,7 +781,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         :disabled="!isDraft"
                                         required
                                         maxlength="10"
-                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-50 disabled:text-slate-500"
+                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>
                                 <label class="block">
@@ -798,14 +798,14 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         type="number"
                                         min="1"
                                         required
-                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-50 disabled:text-slate-500"
+                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>
                                 <div v-if="isDraft" class="lg:col-span-2">
                                     <button
                                         type="submit"
                                         :disabled="versionForm.processing"
-                                        class="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                                        class="rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                                     >
                                         Version speichern
                                     </button>
@@ -817,7 +817,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                             v-if="isDraft"
                             class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                         >
-                            <h2 class="font-semibold text-slate-950">
+                            <h2 class="font-semibold text-slate-900">
                                 Modul hinzufügen
                             </h2>
                             <div
@@ -831,7 +831,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                     </span>
                                     <select
                                         v-model="selectedModuleVersionId"
-                                        class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                        class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                                     >
                                         <option
                                             v-for="moduleVersion in selectableModuleVersions"
@@ -850,7 +850,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                     </span>
                                     <select
                                         v-model="selectedRepeatMode"
-                                        class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                        class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                                     >
                                         <option value="once">Einmal</option>
                                         <option value="per_target">
@@ -864,7 +864,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         moduleLinkForm.processing ||
                                         !selectedModuleVersionId
                                     "
-                                    class="self-end rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                    class="self-end rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
                                     @click="addModule"
                                 >
                                     Hinzufügen
@@ -887,7 +887,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                 class="flex flex-col justify-between gap-3 border-b border-slate-200 px-5 py-4 lg:flex-row lg:items-center"
                             >
                                 <div>
-                                    <h2 class="font-semibold text-slate-950">
+                                    <h2 class="font-semibold text-slate-900">
                                         Module dieser Version
                                     </h2>
                                     <p class="mt-1 text-sm text-slate-500">
@@ -911,7 +911,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                     class="grid gap-4 px-5 py-4 lg:grid-cols-[1fr_180px_auto]"
                                 >
                                     <div>
-                                        <h3 class="font-medium text-slate-950">
+                                        <h3 class="font-medium text-slate-900">
                                             {{
                                                 moduleLink.module_version
                                                     .module_name
@@ -957,7 +957,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         <select
                                             :value="moduleLink.repeat_mode"
                                             :disabled="!isDraft"
-                                            class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-50 disabled:text-slate-500"
+                                            class="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                             @change="
                                                 updateModuleLink(moduleLink, {
                                                     repeat_mode: (
@@ -989,7 +989,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         <button
                                             type="button"
                                             :disabled="index === 0"
-                                            class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-sky-200 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                            class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-teal-200 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40"
                                             @click="
                                                 updateModuleLink(moduleLink, {
                                                     sort_order: index - 1,
@@ -1004,7 +1004,7 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                                 index ===
                                                 sortedModuleLinks.length - 1
                                             "
-                                            class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-sky-200 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                            class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-teal-200 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40"
                                             @click="
                                                 updateModuleLink(moduleLink, {
                                                     sort_order: index + 1,

@@ -526,12 +526,12 @@ function errorFor(name: string): string | null {
             >
                 <div>
                     <p
-                        class="text-xs font-semibold tracking-[0.2em] text-sky-600 uppercase"
+                        class="text-xs font-semibold tracking-[0.2em] text-teal-600 uppercase"
                     >
                         Fragebögen
                     </p>
                     <h1
-                        class="mt-2 text-3xl font-semibold tracking-tight text-slate-950"
+                        class="mt-2 text-3xl font-semibold tracking-tight text-slate-900"
                     >
                         Frageneditor
                     </h1>
@@ -577,7 +577,7 @@ function errorFor(name: string): string | null {
                 </p>
                 <Link
                     :href="resourceIndex('module')"
-                    class="mt-6 inline-flex h-11 items-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white hover:bg-sky-600"
+                    class="mt-6 inline-flex h-11 items-center rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white hover:bg-teal-800"
                 >
                     Erstes Modul anlegen
                 </Link>
@@ -595,7 +595,7 @@ function errorFor(name: string): string | null {
                         </span>
                         <select
                             v-model="selectedModuleId"
-                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <option
                                 v-for="module in localModules"
@@ -615,7 +615,7 @@ function errorFor(name: string): string | null {
                         </span>
                         <select
                             v-model="selectedVersionId"
-                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <option
                                 v-if="selectedModule?.versions.length === 0"
@@ -637,7 +637,7 @@ function errorFor(name: string): string | null {
                     <button
                         type="button"
                         :disabled="cloneForm.processing"
-                        class="h-12 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        class="h-12 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                         @click="createDraft"
                     >
                         {{
@@ -660,7 +660,7 @@ function errorFor(name: string): string | null {
                         <div>
                             <div class="flex flex-wrap items-center gap-2">
                                 <h2
-                                    class="text-lg font-semibold text-slate-950"
+                                    class="text-lg font-semibold text-slate-900"
                                 >
                                     {{ selectedVersion.title }}
                                 </h2>
@@ -689,7 +689,7 @@ function errorFor(name: string): string | null {
                             <div class="flex flex-wrap gap-2">
                                 <button
                                     type="button"
-                                    class="h-11 rounded-xl bg-sky-600 px-5 text-sm font-semibold text-white transition hover:bg-sky-700"
+                                    class="h-11 rounded-xl bg-teal-600 px-5 text-sm font-semibold text-white transition hover:bg-teal-700"
                                     @click="openCreateSection"
                                 >
                                     Abschnitt hinzufügen
@@ -747,13 +747,13 @@ function errorFor(name: string): string | null {
                             >
                                 <div>
                                     <p
-                                        class="text-xs font-semibold tracking-[0.16em] text-sky-600 uppercase"
+                                        class="text-xs font-semibold tracking-[0.16em] text-teal-600 uppercase"
                                     >
                                         Abschnitt
                                         {{ section.sort_order + 1 }}
                                     </p>
                                     <h3
-                                        class="mt-1 text-base font-semibold text-slate-950"
+                                        class="mt-1 text-base font-semibold text-slate-900"
                                     >
                                         {{ section.title }}
                                     </h3>
@@ -768,7 +768,7 @@ function errorFor(name: string): string | null {
                                 <div v-if="isDraft" class="flex gap-2">
                                     <button
                                         type="button"
-                                        class="rounded-lg px-3 py-2 text-xs font-semibold text-sky-700 hover:bg-sky-50"
+                                        class="rounded-lg px-3 py-2 text-xs font-semibold text-teal-700 hover:bg-teal-50"
                                         @click="openEditSection(section)"
                                     >
                                         Bearbeiten
@@ -867,7 +867,7 @@ function errorFor(name: string): string | null {
                                     <div v-if="isDraft" class="flex gap-2">
                                         <button
                                             type="button"
-                                            class="rounded-lg px-3 py-2 text-xs font-semibold text-sky-700 hover:bg-sky-50"
+                                            class="rounded-lg px-3 py-2 text-xs font-semibold text-teal-700 hover:bg-teal-50"
                                             @click="openEditQuestion(question)"
                                         >
                                             Bearbeiten
@@ -901,7 +901,7 @@ function errorFor(name: string): string | null {
                             >
                                 <button
                                     type="button"
-                                    class="text-sm font-semibold text-sky-700 hover:text-sky-800"
+                                    class="text-sm font-semibold text-teal-700 hover:text-teal-800"
                                     @click="openCreateQuestion(section)"
                                 >
                                     + Frage hinzufügen
@@ -923,7 +923,7 @@ function errorFor(name: string): string | null {
                 aria-modal="true"
                 class="w-full max-w-xl rounded-3xl bg-white p-7 shadow-2xl"
             >
-                <h2 class="text-xl font-semibold text-slate-950">
+                <h2 class="text-xl font-semibold text-slate-900">
                     {{
                         editingSection
                             ? 'Abschnitt bearbeiten'
@@ -940,7 +940,7 @@ function errorFor(name: string): string | null {
                         <input
                             v-model="sectionForm.title"
                             required
-                            class="h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         />
                         <span
                             v-if="errorFor('title')"
@@ -958,7 +958,7 @@ function errorFor(name: string): string | null {
                         <textarea
                             v-model="sectionForm.description"
                             rows="3"
-                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         />
                     </label>
                     <div class="flex justify-end gap-3">
@@ -972,7 +972,7 @@ function errorFor(name: string): string | null {
                         <button
                             type="submit"
                             :disabled="sectionForm.processing"
-                            class="h-11 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white hover:bg-sky-600 disabled:opacity-60"
+                            class="h-11 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
                         >
                             Speichern
                         </button>
@@ -994,7 +994,7 @@ function errorFor(name: string): string | null {
                 <div
                     class="sticky top-0 z-10 border-b border-slate-200 bg-white px-6 py-5 sm:px-8"
                 >
-                    <h2 class="text-xl font-semibold text-slate-950">
+                    <h2 class="text-xl font-semibold text-slate-900">
                         {{
                             editingQuestion
                                 ? 'Frage bearbeiten'
@@ -1016,7 +1016,7 @@ function errorFor(name: string): string | null {
                         <select
                             v-model="questionForm.module_section_id"
                             required
-                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <option
                                 v-for="section in selectedVersion?.sections"
@@ -1038,7 +1038,7 @@ function errorFor(name: string): string | null {
                             v-model="questionForm.question_text"
                             required
                             rows="3"
-                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         />
                         <span
                             v-if="errorFor('question_text')"
@@ -1056,7 +1056,7 @@ function errorFor(name: string): string | null {
                         </span>
                         <select
                             v-model="questionForm.question_type"
-                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <option
                                 v-for="type in questionTypes"
@@ -1082,7 +1082,7 @@ function errorFor(name: string): string | null {
                                 v-model.number="questionForm.scale_min"
                                 type="number"
                                 required
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-sky-500"
+                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
                             />
                         </label>
                         <label class="block">
@@ -1095,7 +1095,7 @@ function errorFor(name: string): string | null {
                                 v-model.number="questionForm.scale_max"
                                 type="number"
                                 required
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-sky-500"
+                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
                             />
                         </label>
                         <label class="block">
@@ -1106,7 +1106,7 @@ function errorFor(name: string): string | null {
                             </span>
                             <input
                                 v-model="questionForm.scale_min_label"
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-sky-500"
+                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
                             />
                         </label>
                         <label class="block">
@@ -1117,7 +1117,7 @@ function errorFor(name: string): string | null {
                             </span>
                             <input
                                 v-model="questionForm.scale_max_label"
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-sky-500"
+                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
                             />
                         </label>
                     </div>
@@ -1137,7 +1137,7 @@ function errorFor(name: string): string | null {
                             </div>
                             <button
                                 type="button"
-                                class="rounded-lg bg-white px-3 py-2 text-xs font-semibold text-sky-700 shadow-sm"
+                                class="rounded-lg bg-white px-3 py-2 text-xs font-semibold text-teal-700 shadow-sm"
                                 @click="addOption"
                             >
                                 Option hinzufügen
@@ -1152,7 +1152,7 @@ function errorFor(name: string): string | null {
                                 <input
                                     v-model="questionForm.options[index]"
                                     required
-                                    class="h-11 flex-1 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-sky-500"
+                                    class="h-11 flex-1 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500"
                                 />
                                 <button
                                     type="button"
@@ -1178,7 +1178,7 @@ function errorFor(name: string): string | null {
                         <input
                             v-model="questionForm.is_required"
                             type="checkbox"
-                            class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                            class="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
                         />
                         <span class="text-sm font-medium text-slate-700">
                             Diese Frage ist verpflichtend
@@ -1198,7 +1198,7 @@ function errorFor(name: string): string | null {
                         <button
                             type="submit"
                             :disabled="questionForm.processing"
-                            class="h-11 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white hover:bg-sky-600 disabled:opacity-60"
+                            class="h-11 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
                         >
                             {{
                                 questionForm.processing
@@ -1221,7 +1221,7 @@ function errorFor(name: string): string | null {
                 aria-modal="true"
                 class="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl"
             >
-                <h2 class="text-xl font-semibold text-slate-950">
+                <h2 class="text-xl font-semibold text-slate-900">
                     {{
                         deleteTarget.kind === 'section'
                             ? 'Abschnitt löschen?'

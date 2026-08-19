@@ -1,0 +1,1015 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R] /Count 8 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 3088 >>
+stream
+BT
+/F2 22 Tf
+54.00 781.89 Td
+(Benutzerhandbuch: Evaluationen erstellen) Tj
+/F2 22 Tf
+54.00 752.89 Td
+(und TANs ausgeben) Tj
+/F1 10 Tf
+54.00 723.89 Td
+(Version: 1.0) Tj
+/F1 10 Tf
+54.00 710.89 Td
+(Stand: 13.08.2026) Tj
+/F1 10 Tf
+54.00 697.89 Td
+(Zielgruppe: interne Mitarbeitende, die Evaluationen vorbereiten, starten und TANs an) Tj
+/F1 10 Tf
+54.00 684.89 Td
+(Teilnehmende ausgeben.) Tj
+/F2 15 Tf
+54.00 671.89 Td
+(1. Grundidee der Plattform) Tj
+/F1 10 Tf
+54.00 651.89 Td
+(Die Plattform hat zwei getrennte Bereiche:) Tj
+/F1 10 Tf
+54.00 638.89 Td
+(- Interner Bereich: Mitarbeitende melden sich an und verwalten Standorte, Kurse, Lehrende,) Tj
+/F1 10 Tf
+54.00 625.89 Td
+(Module, Fragebögen, Evaluationen und TANs.) Tj
+/F1 10 Tf
+54.00 612.89 Td
+(- Öffentlicher TAN-Bereich: Teilnehmende melden sich nicht an. Sie öffnen die öffentliche) Tj
+/F1 10 Tf
+54.00 599.89 Td
+(Evaluationsseite, geben ihre TAN ein und beantworten den Fragebogen anonym.) Tj
+/F1 10 Tf
+54.00 586.89 Td
+(Teilnehmende haben keine Benutzerkonten. Eine TAN steuert nur den Zugang zur Evaluation und) Tj
+/F1 10 Tf
+54.00 573.89 Td
+(wird nach der Abgabe verbraucht.) Tj
+/F2 15 Tf
+54.00 560.89 Td
+(2. Rollen und Berechtigungen) Tj
+/F1 10 Tf
+54.00 540.89 Td
+(Mitarbeitende benötigen passende Berechtigungen. Für das Erstellen und Verwalten von) Tj
+/F1 10 Tf
+54.00 527.89 Td
+(Evaluationen wird aktuell die Berechtigung campaigns.manage verwendet.) Tj
+/F1 10 Tf
+54.00 514.89 Td
+(Typische Rollen:) Tj
+/F1 10 Tf
+54.00 501.89 Td
+(- Super-Administration: kann alle Verwaltungsbereiche bedienen.) Tj
+/F1 10 Tf
+54.00 488.89 Td
+(- Administration: kann die Verwaltungsbereiche bedienen.) Tj
+/F1 10 Tf
+54.00 475.89 Td
+(- Fragebogen-Redaktion: erstellt Module und Fragebögen.) Tj
+/F1 10 Tf
+54.00 462.89 Td
+(- Berichtszugriff: sieht später Ergebnisse und Berichte.) Tj
+/F1 10 Tf
+54.00 449.89 Td
+(Wenn eine Seite nicht sichtbar ist oder mit "403" blockiert wird, fehlt dem Benutzer) Tj
+/F1 10 Tf
+54.00 436.89 Td
+(wahrscheinlich die passende Berechtigung.) Tj
+/F2 15 Tf
+54.00 423.89 Td
+(3. Wichtige Navigation) Tj
+/F1 10 Tf
+54.00 403.89 Td
+(Nach dem Login befindet sich die Hauptnavigation oben beziehungsweise links im) Tj
+/F1 10 Tf
+54.00 390.89 Td
+(Verwaltungsbereich.) Tj
+/F1 10 Tf
+54.00 377.89 Td
+(Wichtige Menüpunkte für Evaluationen:) Tj
+/F1 10 Tf
+54.00 364.89 Td
+(- Standorte: Bundesländer und Standorte wie Thüringen, Erfurt, Sachsen, Leipzig verwalten.) Tj
+/F1 10 Tf
+54.00 351.89 Td
+(- Lehrende: Lehrpersonen verwalten.) Tj
+/F1 10 Tf
+54.00 338.89 Td
+(- Kurse: Kurse anlegen und Lehrende zuordnen.) Tj
+/F1 10 Tf
+54.00 325.89 Td
+(- Module: wiederverwendbare Fragenblöcke anlegen.) Tj
+/F1 10 Tf
+54.00 312.89 Td
+(- Frageneditor: Modulversionen, Abschnitte und Fragen bearbeiten und veröffentlichen.) Tj
+/F1 10 Tf
+54.00 299.89 Td
+(- Fragebögen: Fragebogenvorlagen anlegen.) Tj
+/F1 10 Tf
+54.00 286.89 Td
+(- Fragebogen-Builder: veröffentlichte Module zu einer Fragebogenversion zusammenstellen.) Tj
+/F1 10 Tf
+54.00 273.89 Td
+(- Evaluationen: konkrete Evaluationen anlegen und TANs erzeugen.) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 1 von 8) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 2730 >>
+stream
+BT
+/F2 15 Tf
+54.00 781.89 Td
+(4. Gesamtworkflow) Tj
+/F1 10 Tf
+54.00 761.89 Td
+(Eine Evaluation funktioniert nur sauber, wenn die Vorarbeit in der richtigen Reihenfolge) Tj
+/F1 10 Tf
+54.00 748.89 Td
+(erledigt wurde:) Tj
+/F1 10 Tf
+54.00 735.89 Td
+(1. Standort prüfen oder anlegen.) Tj
+/F1 10 Tf
+54.00 722.89 Td
+(2. Lehrende anlegen.) Tj
+/F1 10 Tf
+54.00 709.89 Td
+(3. Kurs anlegen und Lehrende zuordnen.) Tj
+/F1 10 Tf
+54.00 696.89 Td
+(4. Module anlegen.) Tj
+/F1 10 Tf
+54.00 683.89 Td
+(5. Im Frageneditor eine Modulversion erstellen, Abschnitte und Fragen hinzufügen und die) Tj
+/F1 10 Tf
+54.00 670.89 Td
+(Modulversion veröffentlichen.) Tj
+/F1 10 Tf
+54.00 657.89 Td
+(6. Eine Fragebogenvorlage anlegen.) Tj
+/F1 10 Tf
+54.00 644.89 Td
+(7. Im Fragebogen-Builder eine Fragebogenversion erstellen, veröffentlichte Module hinzufügen,) Tj
+/F1 10 Tf
+54.00 631.89 Td
+(Wiederholung festlegen und die Version veröffentlichen.) Tj
+/F1 10 Tf
+54.00 618.89 Td
+(8. Unter Evaluationen eine konkrete Evaluation erstellen.) Tj
+/F1 10 Tf
+54.00 605.89 Td
+(9. Für die Evaluation TANs erzeugen.) Tj
+/F1 10 Tf
+54.00 592.89 Td
+(10. TANs an Teilnehmende weitergeben.) Tj
+/F1 10 Tf
+54.00 579.89 Td
+(11. Teilnehmende füllen die Evaluation anonym aus.) Tj
+/F1 10 Tf
+54.00 566.89 Td
+(12. Nach Ende der Evaluation werden Antworten und später Berichte ausgewertet.) Tj
+/F2 15 Tf
+54.00 553.89 Td
+(5. Standort, Kurs und Lehrende vorbereiten) Tj
+/F2 13 Tf
+54.00 533.89 Td
+(Standort) Tj
+/F1 10 Tf
+54.00 516.89 Td
+(Pfad: Verwaltung -> Standorte) Tj
+/F1 10 Tf
+54.00 503.89 Td
+(Ein Standort gehört normalerweise zu einem Bundesland. Beispiel:) Tj
+/F1 10 Tf
+54.00 490.89 Td
+(- Thüringen) Tj
+/F1 10 Tf
+54.00 477.89 Td
+(- Erfurt) Tj
+/F1 10 Tf
+54.00 464.89 Td
+(- Suhl) Tj
+/F1 10 Tf
+54.00 451.89 Td
+(- Sachsen) Tj
+/F1 10 Tf
+54.00 438.89 Td
+(- Chemnitz) Tj
+/F1 10 Tf
+54.00 425.89 Td
+(- Döbeln) Tj
+/F1 10 Tf
+54.00 412.89 Td
+(- Dresden) Tj
+/F1 10 Tf
+54.00 399.89 Td
+(- Leipzig) Tj
+/F1 10 Tf
+54.00 386.89 Td
+(- Riesa) Tj
+/F1 10 Tf
+54.00 373.89 Td
+(- Berlin) Tj
+/F1 10 Tf
+54.00 360.89 Td
+(- Prenzlauer Promenade) Tj
+/F1 10 Tf
+54.00 347.89 Td
+(- Trachenbergring) Tj
+/F1 10 Tf
+54.00 334.89 Td
+(Viele Datensätze werden später nach Standort gefiltert. Deshalb sollte ein Kurs immer dem) Tj
+/F1 10 Tf
+54.00 321.89 Td
+(richtigen Standort zugeordnet werden.) Tj
+/F2 13 Tf
+54.00 308.89 Td
+(Lehrende) Tj
+/F1 10 Tf
+54.00 291.89 Td
+(Pfad: Verwaltung -> Lehrende) Tj
+/F1 10 Tf
+54.00 278.89 Td
+(Lehrende können mit oder ohne Benutzerkonto angelegt werden. Für Evaluationen reicht ein) Tj
+/F1 10 Tf
+54.00 265.89 Td
+(Lehrenden-Datensatz mit Name, E-Mail-Adresse und Standort. Ein Login ist nicht zwingend) Tj
+/F1 10 Tf
+54.00 252.89 Td
+(notwendig.) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 2 von 8) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 2386 >>
+stream
+BT
+/F2 13 Tf
+54.00 781.89 Td
+(Kurs) Tj
+/F1 10 Tf
+54.00 764.89 Td
+(Pfad: Verwaltung -> Kurse) Tj
+/F1 10 Tf
+54.00 751.89 Td
+(Beim Kurs werden diese Daten gepflegt:) Tj
+/F1 10 Tf
+54.00 738.89 Td
+(- Kursname, zum Beispiel "Deutsch B2".) Tj
+/F1 10 Tf
+54.00 725.89 Td
+(- Kurscode, zum Beispiel "DE-B2-2026-09".) Tj
+/F1 10 Tf
+54.00 712.89 Td
+(- Standort.) Tj
+/F1 10 Tf
+54.00 699.89 Td
+(- Beginn und Ende, falls bekannt.) Tj
+/F1 10 Tf
+54.00 686.89 Td
+(- Zugeordnete Lehrende.) Tj
+/F1 10 Tf
+54.00 673.89 Td
+(Wichtig: Wenn später ein Dozentenmodul pro Lehrperson erscheinen soll, müssen die Lehrenden) Tj
+/F1 10 Tf
+54.00 660.89 Td
+(dem Kurs zugeordnet sein.) Tj
+/F2 15 Tf
+54.00 647.89 Td
+(6. Module und Fragen vorbereiten) Tj
+/F2 13 Tf
+54.00 627.89 Td
+(Modul anlegen) Tj
+/F1 10 Tf
+54.00 610.89 Td
+(Pfad: Verwaltung -> Module) Tj
+/F1 10 Tf
+54.00 597.89 Td
+(Ein Modul ist ein wiederverwendbarer Block von Fragen. Beispiele:) Tj
+/F1 10 Tf
+54.00 584.89 Td
+(- Organisation) Tj
+/F1 10 Tf
+54.00 571.89 Td
+(- Dozent / Unterricht) Tj
+/F1 10 Tf
+54.00 558.89 Td
+(- Räume / Technik) Tj
+/F1 10 Tf
+54.00 545.89 Td
+(- Kursinhalt) Tj
+/F1 10 Tf
+54.00 532.89 Td
+(- Abschlusskommentar) Tj
+/F1 10 Tf
+54.00 519.89 Td
+(Das Modul selbst ist nur der Container. Die eigentlichen Fragen liegen in Modulversionen.) Tj
+/F2 13 Tf
+54.00 506.89 Td
+(Modulversion bearbeiten) Tj
+/F1 10 Tf
+54.00 489.89 Td
+(Pfad: Verwaltung -> Frageneditor) Tj
+/F1 10 Tf
+54.00 476.89 Td
+(Im Frageneditor wird eine Entwurfsversion erstellt. In dieser Version werden Abschnitte und) Tj
+/F1 10 Tf
+54.00 463.89 Td
+(Fragen angelegt.) Tj
+/F1 10 Tf
+54.00 450.89 Td
+(Unterstützte Fragetypen:) Tj
+/F1 10 Tf
+54.00 437.89 Td
+(- Skala: Bewertung mit Zahlen, zum Beispiel 1 bis 5.) Tj
+/F1 10 Tf
+54.00 424.89 Td
+(- Einfachauswahl: genau eine Antwortoption.) Tj
+/F1 10 Tf
+54.00 411.89 Td
+(- Freitext: freie Texteingabe.) Tj
+/F1 10 Tf
+54.00 398.89 Td
+(- Ja / Nein: einfache Zustimmung oder Ablehnung.) Tj
+/F1 10 Tf
+54.00 385.89 Td
+(Beispiel für eine Skalenfrage:) Tj
+/F1 10 Tf
+54.00 372.89 Td
+(- Frage: "Der Dozent erklärt verständlich.") Tj
+/F1 10 Tf
+54.00 359.89 Td
+(- Typ: Skala) Tj
+/F1 10 Tf
+54.00 346.89 Td
+(- Minimum: 1) Tj
+/F1 10 Tf
+54.00 333.89 Td
+(- Maximum: 5) Tj
+/F1 10 Tf
+54.00 320.89 Td
+(- Minimum-Label: "Stimme überhaupt nicht zu") Tj
+/F1 10 Tf
+54.00 307.89 Td
+(- Maximum-Label: "Stimme voll zu") Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 3 von 8) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 2708 >>
+stream
+BT
+/F2 13 Tf
+54.00 781.89 Td
+(Modulversion veröffentlichen) Tj
+/F1 10 Tf
+54.00 764.89 Td
+(Eine Modulversion kann erst veröffentlicht werden, wenn sie mindestens eine Frage enthält.) Tj
+/F1 10 Tf
+54.00 751.89 Td
+(Nach der Veröffentlichung ist die Version gesperrt. Das ist Absicht: Alte Evaluationen müssen) Tj
+/F1 10 Tf
+54.00 738.89 Td
+(immer exakt mit der damaligen Frageversion verbunden bleiben. Für Änderungen wird eine neue) Tj
+/F1 10 Tf
+54.00 725.89 Td
+(Entwurfsversion erstellt.) Tj
+/F2 15 Tf
+54.00 712.89 Td
+(7. Fragebogen zusammenstellen) Tj
+/F2 13 Tf
+54.00 692.89 Td
+(Fragebogenvorlage anlegen) Tj
+/F1 10 Tf
+54.00 675.89 Td
+(Pfad: Verwaltung -> Fragebögen) Tj
+/F1 10 Tf
+54.00 662.89 Td
+(Eine Fragebogenvorlage ist der übergeordnete Name, zum Beispiel "Kursbewertung". Die) Tj
+/F1 10 Tf
+54.00 649.89 Td
+(eigentliche nutzbare Fassung ist eine Fragebogenversion.) Tj
+/F2 13 Tf
+54.00 636.89 Td
+(Fragebogenversion im Builder erstellen) Tj
+/F1 10 Tf
+54.00 619.89 Td
+(Pfad: Verwaltung -> Fragebogen-Builder) Tj
+/F1 10 Tf
+54.00 606.89 Td
+(Im Fragebogen-Builder wird eine Entwurfsversion erstellt. Danach werden veröffentlichte) Tj
+/F1 10 Tf
+54.00 593.89 Td
+(Modulversionen hinzugefügt.) Tj
+/F1 10 Tf
+54.00 580.89 Td
+(Für jedes Modul wird festgelegt:) Tj
+/F1 10 Tf
+54.00 567.89 Td
+(- Reihenfolge im Fragebogen.) Tj
+/F1 10 Tf
+54.00 554.89 Td
+(- Wiederholung:) Tj
+/F1 10 Tf
+54.00 541.89 Td
+(- Einmal: Das Modul erscheint einmal.) Tj
+/F1 10 Tf
+54.00 528.89 Td
+(- Pro Zielperson: Das Modul erscheint pro Zielperson, zum Beispiel pro Lehrperson.) Tj
+/F1 10 Tf
+54.00 515.89 Td
+(Beispiel:) Tj
+/F1 10 Tf
+54.00 502.89 Td
+(- Organisation: Einmal.) Tj
+/F1 10 Tf
+54.00 489.89 Td
+(- Dozent / Unterricht: Pro Zielperson.) Tj
+/F1 10 Tf
+54.00 476.89 Td
+(- Abschlusskommentar: Einmal.) Tj
+/F1 10 Tf
+54.00 463.89 Td
+(Wenn ein Kurs zwei Lehrende hat, erscheint das Dozentenmodul später zweimal:) Tj
+/F1 10 Tf
+54.00 450.89 Td
+(- Dozent / Unterricht - Frau Müller) Tj
+/F1 10 Tf
+54.00 437.89 Td
+(- Dozent / Unterricht - Herr Schmidt) Tj
+/F2 13 Tf
+54.00 424.89 Td
+(Fragebogenversion veröffentlichen) Tj
+/F1 10 Tf
+54.00 407.89 Td
+(Die Schaltfläche "Version veröffentlichen" ist nur nutzbar, wenn die Fragebogenversion) Tj
+/F1 10 Tf
+54.00 394.89 Td
+(mindestens ein Modul enthält.) Tj
+/F1 10 Tf
+54.00 381.89 Td
+(Nach der Veröffentlichung ist die Fragebogenversion gesperrt und kann für Evaluationen) Tj
+/F1 10 Tf
+54.00 368.89 Td
+(ausgewählt werden.) Tj
+/F2 15 Tf
+54.00 355.89 Td
+(8. Evaluation erstellen) Tj
+/F1 10 Tf
+54.00 335.89 Td
+(Pfad: Verwaltung -> Evaluationen -> Evaluation anlegen) Tj
+/F1 10 Tf
+54.00 322.89 Td
+(Beim Anlegen einer Evaluation werden diese Felder gepflegt:) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 4 von 8) Tj
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 3190 >>
+stream
+BT
+/F1 10 Tf
+54.00 781.89 Td
+(- Titel: eindeutiger Name der Evaluation, zum Beispiel "Deutsch B2 Kursbewertung September) Tj
+/F1 10 Tf
+54.00 768.89 Td
+(2026".) Tj
+/F1 10 Tf
+54.00 755.89 Td
+(- Beschreibung: optionaler Hinweistext.) Tj
+/F1 10 Tf
+54.00 742.89 Td
+(- Standort: Standort der Evaluation.) Tj
+/F1 10 Tf
+54.00 729.89 Td
+(- Kurs: optional, aber für Kursevaluationen empfohlen.) Tj
+/F1 10 Tf
+54.00 716.89 Td
+(- Veröffentlichte Fragebogenversion: Pflichtfeld.) Tj
+/F1 10 Tf
+54.00 703.89 Td
+(- Beginn: Startzeitpunkt.) Tj
+/F1 10 Tf
+54.00 690.89 Td
+(- Ende: Endzeitpunkt.) Tj
+/F1 10 Tf
+54.00 677.89 Td
+(- Status: Entwurf, Geplant, Aktiv, Geschlossen oder Archiviert.) Tj
+/F1 10 Tf
+54.00 664.89 Td
+(- Mindestanzahl Antworten für Ergebnisse: schützt die Anonymität.) Tj
+/F1 10 Tf
+54.00 651.89 Td
+(Statusbedeutung:) Tj
+/F1 10 Tf
+54.00 638.89 Td
+(- Entwurf: Die Evaluation ist vorbereitet, aber noch nicht für Teilnehmende nutzbar.) Tj
+/F1 10 Tf
+54.00 625.89 Td
+(- Geplant: Die Evaluation ist bereit, aber noch nicht aktiv.) Tj
+/F1 10 Tf
+54.00 612.89 Td
+(- Aktiv: Teilnehmende können mit gültiger TAN antworten, wenn der Zeitraum passt.) Tj
+/F1 10 Tf
+54.00 599.89 Td
+(- Geschlossen: Es werden keine Antworten mehr angenommen.) Tj
+/F1 10 Tf
+54.00 586.89 Td
+(- Archiviert: Die Evaluation ist abgeschlossen und aus dem normalen Arbeitsfluss entfernt.) Tj
+/F1 10 Tf
+54.00 573.89 Td
+(Wichtig: Teilnehmende können nur antworten, wenn die Evaluation aktiv ist und der aktuelle) Tj
+/F1 10 Tf
+54.00 560.89 Td
+(Zeitpunkt innerhalb von Beginn und Ende liegt.) Tj
+/F2 15 Tf
+54.00 547.89 Td
+(9. TANs erzeugen) Tj
+/F1 10 Tf
+54.00 527.89 Td
+(Pfad: Verwaltung -> Evaluationen -> TANs) Tj
+/F1 10 Tf
+54.00 514.89 Td
+(In der Evaluationen-Liste gibt es pro Evaluation die Aktion "TANs". Diese öffnet die TAN-) Tj
+/F1 10 Tf
+54.00 501.89 Td
+(Seite der Evaluation.) Tj
+/F1 10 Tf
+54.00 488.89 Td
+(Auf der TAN-Seite sehen Sie:) Tj
+/F1 10 Tf
+54.00 475.89 Td
+(- Titel, Standort, Kurs, Fragebogen und Zeitraum.) Tj
+/F1 10 Tf
+54.00 462.89 Td
+(- Teilnehmer-Link.) Tj
+/F1 10 Tf
+54.00 449.89 Td
+(- TAN-Statistik:) Tj
+/F1 10 Tf
+54.00 436.89 Td
+(- TANs gesamt) Tj
+/F1 10 Tf
+54.00 423.89 Td
+(- Unbenutzt) Tj
+/F1 10 Tf
+54.00 410.89 Td
+(- Gestartet) Tj
+/F1 10 Tf
+54.00 397.89 Td
+(- Verwendet) Tj
+/F1 10 Tf
+54.00 384.89 Td
+(- Inaktiv) Tj
+/F1 10 Tf
+54.00 371.89 Td
+(So erzeugen Sie TANs:) Tj
+/F1 10 Tf
+54.00 358.89 Td
+(1. Anzahl der benötigten TANs eintragen.) Tj
+/F1 10 Tf
+54.00 345.89 Td
+(2. "TANs erzeugen" klicken.) Tj
+/F1 10 Tf
+54.00 332.89 Td
+(3. Die angezeigten TANs sofort kopieren oder als TXT-Datei herunterladen.) Tj
+/F1 10 Tf
+54.00 319.89 Td
+(4. Die TANs an die Teilnehmenden weitergeben.) Tj
+/F1 10 Tf
+54.00 306.89 Td
+(Wichtig: Die TANs werden nur einmal im Klartext angezeigt. In der Datenbank wird nur ein Hash) Tj
+/F1 10 Tf
+54.00 293.89 Td
+(gespeichert. Nach dem Neuladen der Seite können die gleichen TANs nicht erneut im Klartext) Tj
+/F1 10 Tf
+54.00 280.89 Td
+(angezeigt werden.) Tj
+/F1 10 Tf
+54.00 267.89 Td
+(Für geschlossene oder archivierte Evaluationen können keine neuen TANs erzeugt werden.) Tj
+/F2 15 Tf
+54.00 254.89 Td
+(10. TANs an Teilnehmende senden) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 5 von 8) Tj
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 2486 >>
+stream
+BT
+/F1 10 Tf
+54.00 781.89 Td
+(Aktueller Stand der App:) Tj
+/F1 10 Tf
+54.00 768.89 Td
+(- TANs können erzeugt, kopiert und als TXT-Datei heruntergeladen werden.) Tj
+/F1 10 Tf
+54.00 755.89 Td
+(- Die TANs werden aktuell manuell an Teilnehmende gesendet.) Tj
+/F1 10 Tf
+54.00 742.89 Td
+(- Automatische E-Mail-Jobs sind in der Datenstruktur vorgesehen, aber noch nicht als) Tj
+/F1 10 Tf
+54.00 729.89 Td
+(vollständiger normaler Versandworkflow umgesetzt.) Tj
+/F1 10 Tf
+54.00 716.89 Td
+(Empfohlene manuelle Nachricht:) Tj
+/F1 10 Tf
+54.00 703.89 Td
+(Betreff: Ihre TAN zur Kursevaluation) Tj
+/F1 10 Tf
+54.00 690.89 Td
+(Text:) Tj
+/F1 10 Tf
+54.00 677.89 Td
+(Guten Tag,) Tj
+/F1 10 Tf
+54.00 664.89 Td
+(bitte nehmen Sie an der anonymen Kursevaluation teil.) Tj
+/F1 10 Tf
+54.00 651.89 Td
+(Link: /evaluation) Tj
+/F1 10 Tf
+54.00 638.89 Td
+(Ihre TAN: [TAN einsetzen]) Tj
+/F1 10 Tf
+54.00 625.89 Td
+(Die Teilnahme ist anonym. Bitte verwenden Sie die TAN nur einmal.) Tj
+/F1 10 Tf
+54.00 612.89 Td
+(Vielen Dank.) Tj
+/F2 15 Tf
+54.00 599.89 Td
+(11. Teilnehmenden-Workflow) Tj
+/F1 10 Tf
+54.00 579.89 Td
+(Teilnehmende öffnen die öffentliche Evaluationsseite:) Tj
+/F1 10 Tf
+54.00 566.89 Td
+(/evaluation) Tj
+/F1 10 Tf
+54.00 553.89 Td
+(Ablauf:) Tj
+/F1 10 Tf
+54.00 540.89 Td
+(1. TAN eingeben.) Tj
+/F1 10 Tf
+54.00 527.89 Td
+(2. System prüft TAN, Zeitraum und Status der Evaluation.) Tj
+/F1 10 Tf
+54.00 514.89 Td
+(3. Fragebogen wird dynamisch aus der Datenbank geladen.) Tj
+/F1 10 Tf
+54.00 501.89 Td
+(4. Teilnehmende beantworten die Fragen.) Tj
+/F1 10 Tf
+54.00 488.89 Td
+(5. Teilnehmende senden die Evaluation ab.) Tj
+/F1 10 Tf
+54.00 475.89 Td
+(6. Die TAN wird als verwendet markiert.) Tj
+/F1 10 Tf
+54.00 462.89 Td
+(7. Eine Dankeseite wird angezeigt.) Tj
+/F1 10 Tf
+54.00 449.89 Td
+(Die Antworten werden anonym gespeichert. Es wird kein Teilnehmername und kein Teilnehmerkonto) Tj
+/F1 10 Tf
+54.00 436.89 Td
+(gespeichert.) Tj
+/F2 15 Tf
+54.00 423.89 Td
+(12. Was im Hintergrund passiert) Tj
+/F1 10 Tf
+54.00 403.89 Td
+(Bei TAN-Eingabe prüft das System:) Tj
+/F1 10 Tf
+54.00 390.89 Td
+(- Existiert die TAN-) Tj
+/F1 10 Tf
+54.00 377.89 Td
+(- Ist die TAN aktiv-) Tj
+/F1 10 Tf
+54.00 364.89 Td
+(- Wurde die TAN bereits verwendet-) Tj
+/F1 10 Tf
+54.00 351.89 Td
+(- Ist die TAN abgelaufen-) Tj
+/F1 10 Tf
+54.00 338.89 Td
+(- Ist die Evaluation aktiv-) Tj
+/F1 10 Tf
+54.00 325.89 Td
+(- Liegt der aktuelle Zeitpunkt zwischen Beginn und Ende-) Tj
+/F1 10 Tf
+54.00 312.89 Td
+(Beim Absenden:) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 6 von 8) Tj
+ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 2554 >>
+stream
+BT
+/F1 10 Tf
+54.00 781.89 Td
+(- Es wird ein Antwortdatensatz erstellt.) Tj
+/F1 10 Tf
+54.00 768.89 Td
+(- Alle Antworten werden einzeln gespeichert.) Tj
+/F1 10 Tf
+54.00 755.89 Td
+(- Die TAN wird als verwendet markiert.) Tj
+/F1 10 Tf
+54.00 742.89 Td
+(- Alles passiert in einer Datenbank-Transaktion, damit keine halben Antworten entstehen.) Tj
+/F2 15 Tf
+54.00 729.89 Td
+(13. Ergebnisse und Anonymität) Tj
+/F1 10 Tf
+54.00 709.89 Td
+(Die Mindestanzahl Antworten schützt die Anonymität.) Tj
+/F1 10 Tf
+54.00 696.89 Td
+(Beispiel:) Tj
+/F1 10 Tf
+54.00 683.89 Td
+(- Mindestanzahl: 5) Tj
+/F1 10 Tf
+54.00 670.89 Td
+(- Abgegebene Antworten: 3) Tj
+/F1 10 Tf
+54.00 657.89 Td
+(- Ergebnisansicht bleibt gesperrt.) Tj
+/F1 10 Tf
+54.00 644.89 Td
+(Erst wenn die Mindestanzahl erreicht ist, sollen Ergebnisse und Berichte sichtbar werden.) Tj
+/F2 15 Tf
+54.00 631.89 Td
+(14. Häufige Probleme) Tj
+/F2 13 Tf
+54.00 611.89 Td
+(Ich kann keine Fragebogenversion in der Evaluation auswählen) Tj
+/F1 10 Tf
+54.00 594.89 Td
+(Wahrscheinlich ist die Fragebogenversion noch nicht veröffentlicht. Öffnen Sie den) Tj
+/F1 10 Tf
+54.00 581.89 Td
+(Fragebogen-Builder und veröffentlichen Sie die Version.) Tj
+/F2 13 Tf
+54.00 568.89 Td
+(Die Fragebogenversion lässt sich nicht veröffentlichen) Tj
+/F1 10 Tf
+54.00 551.89 Td
+(Die Version enthält wahrscheinlich noch kein Modul. Fügen Sie mindestens eine veröffentlichte) Tj
+/F1 10 Tf
+54.00 538.89 Td
+(Modulversion hinzu.) Tj
+/F2 13 Tf
+54.00 525.89 Td
+(Im Fragebogen-Builder gibt es keine Module zur Auswahl) Tj
+/F1 10 Tf
+54.00 508.89 Td
+(Es gibt noch keine veröffentlichte Modulversion. Öffnen Sie den Frageneditor, erstellen Sie) Tj
+/F1 10 Tf
+54.00 495.89 Td
+(Fragen und veröffentlichen Sie die Modulversion.) Tj
+/F2 13 Tf
+54.00 482.89 Td
+(Teilnehmende sehen "Diese Evaluation ist derzeit nicht aktiv") Tj
+/F1 10 Tf
+54.00 465.89 Td
+(Prüfen Sie:) Tj
+/F1 10 Tf
+54.00 452.89 Td
+(- Status der Evaluation muss "Aktiv" sein.) Tj
+/F1 10 Tf
+54.00 439.89 Td
+(- Beginn darf nicht in der Zukunft liegen.) Tj
+/F1 10 Tf
+54.00 426.89 Td
+(- Ende darf nicht überschritten sein.) Tj
+/F1 10 Tf
+54.00 413.89 Td
+(- TAN muss aktiv und unbenutzt sein.) Tj
+/F2 13 Tf
+54.00 400.89 Td
+(Eine TAN ist ungültig) Tj
+/F1 10 Tf
+54.00 383.89 Td
+(Mögliche Ursachen:) Tj
+/F1 10 Tf
+54.00 370.89 Td
+(- TAN wurde falsch eingegeben.) Tj
+/F1 10 Tf
+54.00 357.89 Td
+(- TAN wurde nie erzeugt.) Tj
+/F1 10 Tf
+54.00 344.89 Td
+(- Leerzeichen oder Tippfehler.) Tj
+/F1 10 Tf
+54.00 331.89 Td
+(- TAN gehört zu einer anderen Umgebung oder Datenbank.) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 7 von 8) Tj
+ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 17 0 R >>
+endobj
+19 0 obj
+<< /Length 2355 >>
+stream
+BT
+/F2 13 Tf
+54.00 781.89 Td
+(Das Dozentenmodul erscheint nicht pro Lehrperson) Tj
+/F1 10 Tf
+54.00 764.89 Td
+(Prüfen Sie:) Tj
+/F1 10 Tf
+54.00 751.89 Td
+(- Der Kurs hat Lehrende zugeordnet.) Tj
+/F1 10 Tf
+54.00 738.89 Td
+(- Das Modul ist als Lehrpersonenmodul gedacht.) Tj
+/F1 10 Tf
+54.00 725.89 Td
+(- Im Fragebogen-Builder ist "Pro Zielperson" ausgewählt.) Tj
+/F1 10 Tf
+54.00 712.89 Td
+(- Die Evaluation hat passende Ziele für Lehrende.) Tj
+/F1 10 Tf
+54.00 699.89 Td
+(Hinweis: Wenn die Zielerzeugung für Kampagnen noch nicht automatisch in der Oberfläche) Tj
+/F1 10 Tf
+54.00 686.89 Td
+(sichtbar ist, muss dieser Teil im nächsten Entwicklungsschritt ergänzt oder geprüft werden.) Tj
+/F2 15 Tf
+54.00 673.89 Td
+(15. Checkliste vor dem Start einer Evaluation) Tj
+/F1 10 Tf
+54.00 653.89 Td
+(- Standort ist korrekt.) Tj
+/F1 10 Tf
+54.00 640.89 Td
+(- Kurs ist korrekt.) Tj
+/F1 10 Tf
+54.00 627.89 Td
+(- Lehrende sind dem Kurs zugeordnet.) Tj
+/F1 10 Tf
+54.00 614.89 Td
+(- Alle benötigten Module sind veröffentlicht.) Tj
+/F1 10 Tf
+54.00 601.89 Td
+(- Die Fragebogenversion ist veröffentlicht.) Tj
+/F1 10 Tf
+54.00 588.89 Td
+(- Evaluation hat den richtigen Standort, Kurs und Fragebogen.) Tj
+/F1 10 Tf
+54.00 575.89 Td
+(- Beginn und Ende sind korrekt.) Tj
+/F1 10 Tf
+54.00 562.89 Td
+(- Status ist auf "Aktiv", wenn Teilnehmende starten sollen.) Tj
+/F1 10 Tf
+54.00 549.89 Td
+(- Genügend TANs wurden erzeugt.) Tj
+/F1 10 Tf
+54.00 536.89 Td
+(- TANs wurden kopiert oder heruntergeladen.) Tj
+/F1 10 Tf
+54.00 523.89 Td
+(- Teilnehmende haben Link und TAN erhalten.) Tj
+/F2 15 Tf
+54.00 510.89 Td
+(16. Kurzfassung für Evaluation Manager) Tj
+/F1 10 Tf
+54.00 490.89 Td
+(1. Kurs und Lehrende prüfen.) Tj
+/F1 10 Tf
+54.00 477.89 Td
+(2. Fragebogen veröffentlichen.) Tj
+/F1 10 Tf
+54.00 464.89 Td
+(3. Evaluation anlegen.) Tj
+/F1 10 Tf
+54.00 451.89 Td
+(4. Status und Zeitraum prüfen.) Tj
+/F1 10 Tf
+54.00 438.89 Td
+(5. In der Evaluationen-Liste auf "TANs" klicken.) Tj
+/F1 10 Tf
+54.00 425.89 Td
+(6. Anzahl eintragen und TANs erzeugen.) Tj
+/F1 10 Tf
+54.00 412.89 Td
+(7. TANs kopieren oder als TXT herunterladen.) Tj
+/F1 10 Tf
+54.00 399.89 Td
+(8. Link /evaluation und TANs an Teilnehmende senden.) Tj
+/F1 10 Tf
+54.00 386.89 Td
+(9. Antworten überwachen.) Tj
+/F1 10 Tf
+54.00 373.89 Td
+(10. Nach Ende Evaluation schließen und Ergebnisse prüfen.) Tj
+ET
+BT /F1 8 Tf
+54.00 28 Td
+(Seite 8 von 8) Tj
+ET
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 19 0 R >>
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000169 00000 n 
+0000000266 00000 n 
+0000000368 00000 n 
+0000003508 00000 n 
+0000003650 00000 n 
+0000006432 00000 n 
+0000006574 00000 n 
+0000009012 00000 n 
+0000009155 00000 n 
+0000011916 00000 n 
+0000012060 00000 n 
+0000015303 00000 n 
+0000015447 00000 n 
+0000017986 00000 n 
+0000018130 00000 n 
+0000020737 00000 n 
+0000020881 00000 n 
+0000023289 00000 n 
+trailer
+<< /Size 21 /Root 1 0 R >>
+startxref
+23433
+%%EOF

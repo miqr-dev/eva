@@ -2,6 +2,7 @@
 import { Head, Link, router, useHttp, usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
+import AppIcon from '@/components/AppIcon.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import benchmarkGroups from '@/routes/admin/api/benchmark-groups';
 import courses from '@/routes/admin/api/courses';
@@ -957,12 +958,12 @@ function isSelf(record: DataRecord): boolean {
         >
             <div>
                 <p
-                    class="text-xs font-semibold tracking-[0.2em] text-sky-600 uppercase"
+                    class="text-xs font-semibold tracking-[0.2em] text-teal-600 uppercase"
                 >
                     Verwaltung
                 </p>
                 <h1
-                    class="mt-2 text-3xl font-semibold tracking-tight text-slate-950"
+                    class="mt-2 text-2xl font-semibold tracking-tight text-slate-900"
                 >
                     {{ definition.title }}
                 </h1>
@@ -973,71 +974,68 @@ function isSelf(record: DataRecord): boolean {
 
             <button
                 type="button"
-                class="inline-flex h-11 items-center justify-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-600"
+                class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800"
                 @click="openCreate"
             >
+                <AppIcon name="plus" class="h-4 w-4" />
                 {{ definition.singular }} anlegen
             </button>
         </div>
 
         <div
             v-if="successMessage"
-            class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+            class="mt-6 rounded-lg border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-800"
         >
             {{ successMessage }}
         </div>
 
         <div
             v-if="generalError"
-            class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+            class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
         >
             {{ generalError }}
         </div>
 
-        <section
-            class="mt-7 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+        <div
+            class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
         >
-            <div
-                class="flex flex-col gap-4 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between"
-            >
-                <div>
-                    <p class="font-semibold text-slate-900">
-                        {{ localRecords.length }} Einträge
-                    </p>
-                    <p class="mt-1 text-sm text-slate-500">
-                        Einträge suchen, bearbeiten oder entfernen.
-                    </p>
-                </div>
+            <p class="text-sm text-slate-500">
+                {{ localRecords.length }} Einträge
+            </p>
 
-                <label class="relative block w-full sm:max-w-sm">
-                    <span class="sr-only">Einträge durchsuchen</span>
-                    <input
-                        v-model="search"
-                        type="search"
-                        placeholder="Einträge durchsuchen..."
-                        class="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 pr-10 text-sm transition outline-none placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100"
-                    />
-                    <span
-                        class="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-slate-400"
-                    >
-                        ⌕
-                    </span>
-                </label>
-            </div>
+            <label class="relative block w-full sm:max-w-xs">
+                <span class="sr-only">Einträge durchsuchen</span>
+                <input
+                    v-model="search"
+                    type="search"
+                    placeholder="Suchen"
+                    class="h-10 w-full rounded-lg border border-slate-300 bg-white pr-4 pl-9 text-sm transition outline-none placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                />
+                <AppIcon
+                    name="search"
+                    class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400"
+                />
+            </label>
+        </div>
 
+        <section
+            class="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+        >
             <div class="overflow-x-auto">
                 <table class="min-w-full text-left text-sm">
-                    <thead class="bg-slate-50 text-slate-500">
-                        <tr>
+                    <thead>
+                        <tr class="border-b border-slate-200">
                             <th
                                 v-for="column in definition.columns"
                                 :key="column.path"
-                                class="px-5 py-3.5 font-medium whitespace-nowrap"
+                                class="px-5 py-3 text-xs font-semibold tracking-wide whitespace-nowrap text-slate-500 uppercase"
                             >
                                 {{ column.label }}
                             </th>
-                            <th class="px-5 py-3.5 text-right font-medium">
-                                Aktionen
+                            <th
+                                class="px-5 py-3 text-right text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                            >
+                                Details
                             </th>
                         </tr>
                     </thead>
@@ -1045,22 +1043,39 @@ function isSelf(record: DataRecord): boolean {
                         <tr
                             v-for="record in filteredRecords"
                             :key="record.id"
-                            class="transition hover:bg-slate-50/80"
+                            class="transition hover:bg-slate-50/70"
                         >
                             <td
                                 v-for="(
                                     column, columnIndex
                                 ) in definition.columns"
                                 :key="column.path"
-                                class="max-w-xs px-5 py-4"
+                                class="max-w-xs px-5 py-3.5"
                                 :class="
                                     columnIndex === 0
-                                        ? 'font-medium text-slate-900'
+                                        ? 'font-medium text-slate-800'
                                         : 'text-slate-600'
                                 "
                             >
                                 <span
-                                    v-if="
+                                    v-if="columnIndex === 0"
+                                    class="flex items-center gap-2.5"
+                                >
+                                    <AppIcon
+                                        name="ring"
+                                        class="h-4 w-4 shrink-0 text-teal-600"
+                                    />
+                                    <span class="line-clamp-2">
+                                        {{
+                                            formatValue(
+                                                getValue(record, column.path),
+                                                column.format,
+                                            )
+                                        }}
+                                    </span>
+                                </span>
+                                <span
+                                    v-else-if="
                                         column.format === 'status' ||
                                         column.format === 'boolean'
                                     "
@@ -1069,7 +1084,7 @@ function isSelf(record: DataRecord): boolean {
                                         column.format === 'boolean' &&
                                         !getValue(record, column.path)
                                             ? 'bg-slate-100 text-slate-600'
-                                            : 'bg-sky-100 text-sky-700'
+                                            : 'bg-teal-50 text-teal-700'
                                     "
                                 >
                                     {{
@@ -1088,34 +1103,47 @@ function isSelf(record: DataRecord): boolean {
                                     }}
                                 </span>
                             </td>
-                            <td class="px-5 py-4 text-right whitespace-nowrap">
-                                <Link
-                                    v-if="props.resourceKey === 'evaluationen'"
-                                    :href="campaignTans(record.id)"
-                                    class="rounded-lg px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50"
+                            <td class="px-5 py-3.5">
+                                <div
+                                    class="flex items-center justify-end gap-1"
                                 >
-                                    TANs
-                                </Link>
-                                <button
-                                    type="button"
-                                    class="ml-1 rounded-lg px-3 py-2 text-xs font-semibold text-sky-700 transition hover:bg-sky-50"
-                                    @click="openEdit(record)"
-                                >
-                                    Bearbeiten
-                                </button>
-                                <button
-                                    type="button"
-                                    class="ml-1 rounded-lg px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
-                                    :disabled="isSelf(record)"
-                                    :title="
-                                        isSelf(record)
-                                            ? 'Das eigene Konto kann nicht gelöscht werden.'
-                                            : 'Eintrag löschen'
-                                    "
-                                    @click="deleteCandidate = record"
-                                >
-                                    Löschen
-                                </button>
+                                    <Link
+                                        v-if="
+                                            props.resourceKey === 'evaluationen'
+                                        "
+                                        :href="campaignTans(record.id)"
+                                        class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-teal-700 transition hover:bg-teal-50"
+                                    >
+                                        TANs
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        title="Bearbeiten"
+                                        class="flex h-8 w-8 items-center justify-center rounded-full text-amber-500 transition hover:bg-amber-50"
+                                        @click="openEdit(record)"
+                                    >
+                                        <AppIcon
+                                            name="pencil"
+                                            class="h-4 w-4"
+                                        />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="flex h-8 w-8 items-center justify-center rounded-full text-red-500 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-30"
+                                        :disabled="isSelf(record)"
+                                        :title="
+                                            isSelf(record)
+                                                ? 'Das eigene Konto kann nicht gelöscht werden.'
+                                                : 'Eintrag löschen'
+                                        "
+                                        @click="deleteCandidate = record"
+                                    >
+                                        <AppIcon
+                                            name="x-circle"
+                                            class="h-4 w-4"
+                                        />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         <tr v-if="filteredRecords.length === 0">
@@ -1146,14 +1174,14 @@ function isSelf(record: DataRecord): boolean {
         <section
             role="dialog"
             aria-modal="true"
-            class="max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl"
+            class="max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl"
         >
             <div
                 class="sticky top-0 z-10 flex items-start justify-between gap-6 border-b border-slate-200 bg-white px-6 py-5 sm:px-8"
             >
                 <div>
                     <p
-                        class="text-xs font-semibold tracking-[0.18em] text-sky-600 uppercase"
+                        class="text-xs font-semibold tracking-[0.18em] text-teal-600 uppercase"
                     >
                         {{
                             editingRecord
@@ -1191,7 +1219,7 @@ function isSelf(record: DataRecord): boolean {
                         <input
                             v-model="form[field.name]"
                             type="checkbox"
-                            class="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                            class="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
                         />
                         <span>
                             <span
@@ -1230,7 +1258,7 @@ function isSelf(record: DataRecord): boolean {
                             rows="4"
                             :required="field.required"
                             :placeholder="field.placeholder"
-                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                             @input="updateTextField(field.name, $event)"
                         />
 
@@ -1238,7 +1266,7 @@ function isSelf(record: DataRecord): boolean {
                             v-else-if="field.type === 'select'"
                             v-model="form[field.name]"
                             :required="field.required"
-                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <option
                                 v-if="field.placeholder || field.nullable"
@@ -1272,7 +1300,7 @@ function isSelf(record: DataRecord): boolean {
                             v-else-if="field.type === 'multiselect'"
                             v-model="form[field.name]"
                             multiple
-                            class="min-h-32 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="min-h-32 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         >
                             <template
                                 v-for="option in fieldOptions(field)"
@@ -1311,7 +1339,7 @@ function isSelf(record: DataRecord): boolean {
                             "
                             :placeholder="field.placeholder"
                             :min="field.type === 'number' ? 0 : undefined"
-                            class="h-12 w-full rounded-xl border border-slate-200 px-4 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-12 w-full rounded-xl border border-slate-200 px-4 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                             @input="updateTextField(field.name, $event)"
                         />
 
@@ -1343,7 +1371,7 @@ function isSelf(record: DataRecord): boolean {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="h-11 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        class="h-11 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {{
                             form.processing
@@ -1364,14 +1392,14 @@ function isSelf(record: DataRecord): boolean {
         <section
             role="alertdialog"
             aria-modal="true"
-            class="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl"
+            class="w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl"
         >
             <div
-                class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-xl font-bold text-red-600"
+                class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600"
             >
-                !
+                <AppIcon name="x-circle" class="h-6 w-6" />
             </div>
-            <h2 class="mt-5 text-xl font-semibold text-slate-950">
+            <h2 class="mt-5 text-xl font-semibold text-slate-900">
                 {{ definition.singular }} löschen?
             </h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">

@@ -214,12 +214,12 @@ function downloadTans(): void {
         >
             <div>
                 <p
-                    class="text-xs font-semibold tracking-[0.2em] text-sky-600 uppercase"
+                    class="text-xs font-semibold tracking-[0.2em] text-teal-600 uppercase"
                 >
                     Evaluationen
                 </p>
                 <h1
-                    class="mt-2 text-3xl font-semibold tracking-tight text-slate-950"
+                    class="mt-2 text-2xl font-semibold tracking-tight text-slate-900"
                 >
                     TANs erzeugen
                 </h1>
@@ -261,11 +261,11 @@ function downloadTans(): void {
                 >
                     <div>
                         <span
-                            class="inline-flex rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700"
+                            class="inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700"
                         >
                             {{ statusLabel(props.campaign.status) }}
                         </span>
-                        <h2 class="mt-4 text-2xl font-semibold text-slate-950">
+                        <h2 class="mt-4 text-2xl font-semibold text-slate-900">
                             {{ props.campaign.title }}
                         </h2>
                         <p
@@ -323,7 +323,7 @@ function downloadTans(): void {
             <div
                 class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
             >
-                <h2 class="text-lg font-semibold text-slate-950">
+                <h2 class="text-lg font-semibold text-slate-900">
                     Teilnehmer-Link
                 </h2>
                 <p class="mt-2 text-sm leading-6 text-slate-500">
@@ -332,7 +332,7 @@ function downloadTans(): void {
                 <a
                     :href="props.evaluationUrl"
                     target="_blank"
-                    class="mt-4 block rounded-xl bg-slate-50 p-4 text-sm font-medium break-all text-sky-700 transition hover:bg-sky-50"
+                    class="mt-4 block rounded-xl bg-slate-50 p-4 text-sm font-medium break-all text-teal-700 transition hover:bg-teal-50"
                 >
                     {{ props.evaluationUrl }}
                 </a>
@@ -348,7 +348,7 @@ function downloadTans(): void {
                 <p class="text-xs font-semibold text-slate-500">
                     {{ item.label }}
                 </p>
-                <p class="mt-2 text-3xl font-semibold text-slate-950">
+                <p class="mt-2 text-3xl font-semibold text-slate-900">
                     {{ item.value }}
                 </p>
             </div>
@@ -361,7 +361,7 @@ function downloadTans(): void {
                 class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
             >
                 <div>
-                    <h2 class="text-xl font-semibold text-slate-950">
+                    <h2 class="text-xl font-semibold text-slate-900">
                         Neue TANs
                     </h2>
                     <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
@@ -387,7 +387,7 @@ function downloadTans(): void {
                             min="1"
                             max="500"
                             required
-                            class="h-11 w-36 rounded-xl border border-slate-200 px-4 text-sm transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="h-11 w-36 rounded-xl border border-slate-200 px-4 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                         />
                         <span
                             v-if="fieldError('amount')"
@@ -403,7 +403,7 @@ function downloadTans(): void {
                             generationForm.processing ||
                             Boolean(generationDisabledReason)
                         "
-                        class="mt-7 h-11 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        class="mt-7 h-11 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {{
                             generationForm.processing
@@ -435,7 +435,7 @@ function downloadTans(): void {
                     >
                         Nur einmal sichtbar
                     </p>
-                    <h2 class="mt-2 text-xl font-semibold text-slate-950">
+                    <h2 class="mt-2 text-xl font-semibold text-slate-900">
                         {{ generatedTans.length }} neue TANs
                     </h2>
                     <p class="mt-2 max-w-2xl text-sm leading-6 text-amber-900">
@@ -448,7 +448,7 @@ function downloadTans(): void {
                 <div class="flex flex-wrap gap-3">
                     <button
                         type="button"
-                        class="h-11 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-600"
+                        class="h-11 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800"
                         @click="copyTans"
                     >
                         Alle kopieren

@@ -111,12 +111,12 @@ function statusLabel(status: string): string {
         >
             <div>
                 <p
-                    class="text-xs font-semibold tracking-[0.2em] text-sky-600 uppercase"
+                    class="text-xs font-semibold tracking-[0.2em] text-teal-600 uppercase"
                 >
                     Dashboard
                 </p>
                 <h1
-                    class="mt-2 text-3xl font-semibold tracking-tight text-slate-950"
+                    class="mt-2 text-2xl font-semibold tracking-tight text-slate-900"
                 >
                     Evaluationsübersicht
                 </h1>
@@ -139,7 +139,7 @@ function statusLabel(status: string): string {
                 v-for="card in statCards"
                 :key="card.key"
                 :href="resourceIndex(card.resource)"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md"
+                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md"
             >
                 <div class="flex items-start justify-between gap-4">
                     <div>
@@ -147,7 +147,7 @@ function statusLabel(status: string): string {
                             {{ card.label }}
                         </p>
                         <p
-                            class="mt-3 text-3xl font-semibold tracking-tight text-slate-950"
+                            class="mt-3 text-3xl font-semibold tracking-tight text-slate-900"
                         >
                             {{ stats[card.key] }}
                         </p>
@@ -163,7 +163,7 @@ function statusLabel(status: string): string {
                     </span>
                 </div>
                 <p
-                    class="mt-5 text-xs font-semibold text-sky-600 opacity-0 transition group-hover:opacity-100"
+                    class="mt-5 text-xs font-semibold text-teal-600 opacity-0 transition group-hover:opacity-100"
                 >
                     Bereich öffnen →
                 </p>
@@ -177,7 +177,7 @@ function statusLabel(status: string): string {
                 class="flex items-center justify-between gap-4 border-b border-slate-200 px-6 py-5"
             >
                 <div>
-                    <h2 class="font-semibold text-slate-950">
+                    <h2 class="font-semibold text-slate-900">
                         Neueste Evaluationen
                     </h2>
                     <p class="mt-1 text-sm text-slate-500">
@@ -186,7 +186,7 @@ function statusLabel(status: string): string {
                 </div>
                 <Link
                     :href="resourceIndex('evaluationen')"
-                    class="hidden text-sm font-semibold text-sky-600 hover:text-sky-700 sm:block"
+                    class="hidden text-sm font-semibold text-teal-600 hover:text-teal-700 sm:block"
                 >
                     Alle anzeigen
                 </Link>
@@ -213,7 +213,7 @@ function statusLabel(status: string): string {
                             </td>
                             <td class="px-6 py-4">
                                 <span
-                                    class="rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700"
+                                    class="rounded-full bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700"
                                 >
                                     {{ statusLabel(campaign.status) }}
                                 </span>

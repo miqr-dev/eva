@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { Head, useHttp } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import { store as submitEvaluation } from '@/routes/evaluation/form';
+import { create as enterTan } from '@/routes/evaluation/tan';
 
 type EvaluationOption = {
     id: number;
@@ -65,10 +67,10 @@ const props = defineProps<{
     form: EvaluationForm;
 }>();
 
-const responseForm = useHttp<
-    { language: string; answers: Record<string, AnswerValue> },
-    unknown
->({
+const responseForm = useForm<{
+    language: string;
+    answers: Record<string, AnswerValue>;
+}>({
     language: props.form.questionnaire.default_language || 'de',
     answers: initialAnswers(),
 });
@@ -109,19 +111,34 @@ function errorFor(answerKey: string): string | null {
     return Array.isArray(error) ? String(error[0]) : String(error);
 }
 
-async function submit(): Promise<void> {
-    await responseForm.submit(submitEvaluation(props.session));
+const sessionError = computed<string | null>(() => {
+    const errors = responseForm.errors as Record<string, unknown>;
+    const error = errors.tan_code;
+
+    if (!error) {
+        return null;
+    }
+
+    return Array.isArray(error) ? String(error[0]) : String(error);
+});
+
+const hasUnansweredRequiredQuestions = computed(
+    () => !sessionError.value && responseForm.hasErrors,
+);
+
+function submit(): void {
+    responseForm.submit(submitEvaluation(props.session));
 }
 </script>
 
 <template>
     <Head :title="props.form.campaign.title" />
 
-    <main class="min-h-screen bg-slate-100 px-5 py-8 text-slate-900">
+    <main class="min-h-screen bg-gray-100 px-5 py-8 text-slate-900">
         <div class="mx-auto max-w-4xl">
-            <header class="rounded-3xl bg-slate-950 p-7 text-white shadow-xl">
+            <header class="rounded-2xl bg-teal-800 p-7 text-white shadow-sm">
                 <p
-                    class="text-xs font-semibold tracking-[0.22em] text-sky-300 uppercase"
+                    class="text-xs font-semibold tracking-[0.22em] text-teal-300 uppercase"
                 >
                     Anonyme Evaluation
                 </p>
@@ -136,6 +153,35 @@ async function submit(): Promise<void> {
                 </p>
             </header>
 
+            <div
+                v-if="sessionError"
+                class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800"
+            >
+                <p class="font-semibold">
+                    Ihre Antworten konnten nicht gespeichert werden.
+                </p>
+                <p class="mt-1 leading-6">{{ sessionError }}</p>
+                <Link
+                    :href="enterTan()"
+                    class="mt-3 inline-flex h-10 items-center rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-700"
+                >
+                    Zur TAN-Eingabe zurückkehren
+                </Link>
+            </div>
+
+            <div
+                v-else-if="hasUnansweredRequiredQuestions"
+                class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800"
+            >
+                <p class="font-semibold">
+                    Ihre Antworten konnten nicht gespeichert werden.
+                </p>
+                <p class="mt-1 leading-6">
+                    Bitte prüfen Sie die rot markierten Pflichtfragen weiter
+                    unten und antworten Sie erneut.
+                </p>
+            </div>
+
             <form class="mt-6 space-y-6" @submit.prevent="submit">
                 <section
                     v-for="module in props.form.modules"
@@ -144,11 +190,11 @@ async function submit(): Promise<void> {
                 >
                     <div class="border-b border-slate-200 px-6 py-5">
                         <p
-                            class="text-xs font-semibold tracking-[0.18em] text-sky-600 uppercase"
+                            class="text-xs font-semibold tracking-[0.18em] text-teal-600 uppercase"
                         >
                             Modul
                         </p>
-                        <h2 class="mt-2 text-xl font-semibold text-slate-950">
+                        <h2 class="mt-2 text-xl font-semibold text-slate-900">
                             {{ module.title }}
                             <span v-if="module.target">
                                 - {{ module.target.label }}
@@ -162,7 +208,7 @@ async function submit(): Promise<void> {
                             :key="section.id"
                             class="px-6 py-5"
                         >
-                            <h3 class="font-semibold text-slate-950">
+                            <h3 class="font-semibold text-slate-900">
                                 {{ section.title }}
                             </h3>
                             <p
@@ -217,7 +263,7 @@ async function submit(): Promise<void> {
                                                     type="radio"
                                                     :name="question.answer_key"
                                                     :value="value"
-                                                    class="text-sky-600 focus:ring-sky-500"
+                                                    class="text-teal-600 focus:ring-teal-500"
                                                 />
                                                 {{ value }}
                                             </label>
@@ -245,7 +291,7 @@ async function submit(): Promise<void> {
                                             ]
                                         "
                                         rows="4"
-                                        class="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                                        class="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
                                     />
 
                                     <div
@@ -266,7 +312,7 @@ async function submit(): Promise<void> {
                                                 type="radio"
                                                 :name="question.answer_key"
                                                 value="yes"
-                                                class="text-sky-600 focus:ring-sky-500"
+                                                class="text-teal-600 focus:ring-teal-500"
                                             />
                                             Ja
                                         </label>
@@ -282,7 +328,7 @@ async function submit(): Promise<void> {
                                                 type="radio"
                                                 :name="question.answer_key"
                                                 value="no"
-                                                class="text-sky-600 focus:ring-sky-500"
+                                                class="text-teal-600 focus:ring-teal-500"
                                             />
                                             Nein
                                         </label>
@@ -303,7 +349,7 @@ async function submit(): Promise<void> {
                                                 type="radio"
                                                 :name="question.answer_key"
                                                 :value="option.id"
-                                                class="text-sky-600 focus:ring-sky-500"
+                                                class="text-teal-600 focus:ring-teal-500"
                                             />
                                             {{ option.label }}
                                         </label>
@@ -327,7 +373,7 @@ async function submit(): Promise<void> {
                     <button
                         type="submit"
                         :disabled="responseForm.processing"
-                        class="h-12 w-full rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        class="h-12 w-full rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {{
                             responseForm.processing
