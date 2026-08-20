@@ -164,11 +164,11 @@ function isActive(item: NavigationItem): boolean {
                     class="flex items-center gap-2.5"
                     @click="mobileNavigationOpen = false"
                 >
-                    <span
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600 text-white"
-                    >
-                        <AppIcon name="ring" class="h-4 w-4" />
-                    </span>
+                    <img
+                        src="/images/logo-mark.png"
+                        alt="eva"
+                        class="h-8 w-8 shrink-0 rounded-full"
+                    />
                     <span class="text-lg font-semibold">eva</span>
                 </Link>
                 <button
@@ -232,11 +232,11 @@ function isActive(item: NavigationItem): boolean {
                         :href="dashboard()"
                         class="hidden shrink-0 items-center gap-2.5 lg:flex"
                     >
-                        <span
-                            class="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600 text-white"
-                        >
-                            <AppIcon name="ring" class="h-4 w-4" />
-                        </span>
+                        <img
+                            src="/images/logo-mark.png"
+                            alt="eva"
+                            class="h-8 w-8 shrink-0 rounded-full"
+                        />
                         <span
                             class="text-lg font-semibold tracking-tight text-slate-900"
                         >

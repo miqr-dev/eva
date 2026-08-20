@@ -2,7 +2,6 @@
 import { Form, Head } from '@inertiajs/vue3';
 
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import AppIcon from '@/components/AppIcon.vue';
 
 defineOptions({ inheritAttrs: false });
 </script>
@@ -14,14 +13,14 @@ defineOptions({ inheritAttrs: false });
         class="flex min-h-screen items-center justify-center bg-gray-100 px-5 py-10 sm:px-6"
     >
         <div class="w-full max-w-sm">
-            <div class="mb-8 flex items-center justify-center gap-2.5">
+            <div class="mb-10 flex items-center justify-center gap-3">
+                <img
+                    src="/images/logo-mark.png"
+                    alt="eva"
+                    class="h-18 w-18 shrink-0 rounded-full"
+                />
                 <span
-                    class="flex h-9 w-9 items-center justify-center rounded-full bg-teal-600 text-white"
-                >
-                    <AppIcon name="ring" class="h-4.5 w-4.5" />
-                </span>
-                <span
-                    class="text-xl font-semibold tracking-tight text-slate-900"
+                    class="text-2xl font-semibold tracking-tight text-slate-900"
                 >
                     eva
                 </span>
