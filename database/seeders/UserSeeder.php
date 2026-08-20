@@ -18,26 +18,47 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function (): void {
-            $user = User::query()->updateOrCreate(
-                ['email' => 'ara.matoyan@miqr.de'],
-                [
-                    'organization_unit_id' => null,
-                    'name' => 'Ara',
-                    'password' => '123qwe!',
-                    'is_active' => true,
-                ],
-            );
-
-            $user->forceFill([
-                'email_verified_at' => now(),
-            ])->save();
-
             $superAdministrationRole = Role::query()
                 ->where('name', 'super-admin')
                 ->where('guard_name', 'web')
                 ->firstOrFail();
 
-            $user->roles()->syncWithoutDetaching([$superAdministrationRole->id]);
+            foreach ($this->users() as $attributes) {
+                $user = User::query()->updateOrCreate(
+                    ['email' => $attributes['email']],
+                    [
+                        'organization_unit_id' => null,
+                        'name' => $attributes['name'],
+                        'password' => $attributes['password'],
+                        'is_active' => true,
+                    ],
+                );
+
+                $user->forceFill([
+                    'email_verified_at' => now(),
+                ])->save();
+
+                $user->roles()->syncWithoutDetaching([$superAdministrationRole->id]);
+            }
         });
+    }
+
+    /**
+     * @return array<int, array{name: string, email: string, password: string}>
+     */
+    private function users(): array
+    {
+        return [
+            [
+                'name' => 'Ara',
+                'email' => 'ara.matoyan@miqr.de',
+                'password' => '123qwe!',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin@eva.de',
+                'password' => 'Miqr.2020~',
+            ],
+        ];
     }
 }
