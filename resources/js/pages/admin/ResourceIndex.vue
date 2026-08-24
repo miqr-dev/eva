@@ -221,7 +221,7 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 type: 'multiselect',
                 optionsKey: 'roles',
                 default: [],
-                help: 'Mehrfachauswahl mit Strg beziehungsweise Cmd.',
+                help: 'Mehrfachauswahl mit Strg.',
             },
             {
                 name: 'permission_ids',
@@ -281,7 +281,7 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 type: 'multiselect',
                 optionsKey: 'teachers',
                 default: [],
-                help: 'Mehrfachauswahl mit Strg beziehungsweise Cmd.',
+                help: 'Mehrfachauswahl mit Strg.',
             },
             {
                 name: 'is_active',
@@ -329,7 +329,7 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 type: 'multiselect',
                 optionsKey: 'courses',
                 default: [],
-                help: 'Mehrfachauswahl mit Strg beziehungsweise Cmd.',
+                help: 'Mehrfachauswahl mit Strg.',
             },
             {
                 name: 'is_active',
@@ -1169,7 +1169,6 @@ function isSelf(record: DataRecord): boolean {
     <div
         v-if="editorOpen"
         class="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-6"
-        @click.self="closeEditor"
     >
         <section
             role="dialog"
@@ -1387,7 +1386,6 @@ function isSelf(record: DataRecord): boolean {
     <div
         v-if="deleteCandidate"
         class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/50 p-6 backdrop-blur-sm"
-        @click.self="deleteCandidate = null"
     >
         <section
             role="alertdialog"

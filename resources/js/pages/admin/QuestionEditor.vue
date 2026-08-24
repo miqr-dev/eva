@@ -916,7 +916,6 @@ function errorFor(name: string): string | null {
         <div
             v-if="sectionEditorOpen"
             class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/50 p-5 backdrop-blur-sm"
-            @click.self="sectionEditorOpen = false"
         >
             <section
                 role="dialog"
@@ -984,7 +983,6 @@ function errorFor(name: string): string | null {
         <div
             v-if="questionEditorOpen"
             class="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-5"
-            @click.self="questionEditorOpen = false"
         >
             <section
                 role="dialog"
@@ -1214,7 +1212,6 @@ function errorFor(name: string): string | null {
         <div
             v-if="deleteTarget"
             class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/50 p-5 backdrop-blur-sm"
-            @click.self="deleteTarget = null"
         >
             <section
                 role="alertdialog"

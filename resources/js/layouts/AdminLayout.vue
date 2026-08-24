@@ -46,28 +46,28 @@ const navigation: NavigationItem[] = [
     },
     { label: 'Kurse', shortLabel: 'Kurse', icon: 'layers', resource: 'kurse' },
     {
-        label: 'Fragebögen',
-        shortLabel: 'Fragebögen',
-        icon: 'clipboard-list',
-        resource: 'frageboegen',
-    },
-    {
         label: 'Module',
         shortLabel: 'Module',
         icon: 'puzzle',
         resource: 'module',
     },
     {
-        label: 'Fragebogen-Builder',
-        shortLabel: 'Builder',
-        icon: 'layout',
-        questionnaireBuilder: true,
-    },
-    {
         label: 'Frageneditor',
         shortLabel: 'Fragen',
         icon: 'help-circle',
         questionEditor: true,
+    },
+    {
+        label: 'Fragebögen',
+        shortLabel: 'Fragebögen',
+        icon: 'clipboard-list',
+        resource: 'frageboegen',
+    },
+    {
+        label: 'Fragebogen-Builder',
+        shortLabel: 'Builder',
+        icon: 'layout',
+        questionnaireBuilder: true,
     },
     {
         label: 'Evaluationen',
