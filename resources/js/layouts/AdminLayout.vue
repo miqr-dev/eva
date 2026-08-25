@@ -6,6 +6,7 @@ import { destroy } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessio
 import AppIcon from '@/components/AppIcon.vue';
 import type { IconName } from '@/components/AppIcon.vue';
 import { dashboard } from '@/routes';
+import { index as help } from '@/routes/admin/help';
 import { index as questionnaireBuilder } from '@/routes/admin/questionnaire-builder';
 import { index as questionEditor } from '@/routes/admin/questions';
 import { index as resourceIndex } from '@/routes/admin/resources';
@@ -270,8 +271,8 @@ function isActive(item: NavigationItem): boolean {
                             <AppIcon name="search" class="h-4 w-4" />
                             Suche
                         </button>
-                        <button
-                            type="button"
+                        <Link
+                            :href="help()"
                             class="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 sm:flex"
                         >
                             <AppIcon
@@ -279,7 +280,7 @@ function isActive(item: NavigationItem): boolean {
                                 class="h-4 w-4 text-teal-600"
                             />
                             Hilfe
-                        </button>
+                        </Link>
                         <button
                             type="button"
                             class="rounded-full p-2.5 text-slate-400 hover:bg-slate-50 hover:text-slate-600"

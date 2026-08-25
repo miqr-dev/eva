@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\EvaluationCampaignController;
 use App\Http\Controllers\Admin\EvaluationCampaignTanController;
+use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\ModuleSectionController;
 use App\Http\Controllers\Admin\ModuleVersionController;
@@ -48,6 +49,8 @@ Route::get('evaluation/finished', [EvaluationFormController::class, 'finished'])
 
 Route::middleware('auth')->group(function (): void {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('verwaltung/hilfe', HelpController::class)
+        ->name('admin.help.index');
     Route::get('verwaltung/fragen', QuestionEditorController::class)
         ->name('admin.questions.index');
     Route::get('verwaltung/fragebogen-builder', QuestionnaireBuilderController::class)
