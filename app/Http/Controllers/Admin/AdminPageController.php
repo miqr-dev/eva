@@ -186,7 +186,7 @@ class AdminPageController extends Controller
     }
 
     /**
-     * @return array<string, array<int, array{value?: int|string, label: string, options?: array<int, array{value: int|string, label: string}>}>>
+     * @return array<string, array<int, array{value?: int|string, label: string, organization_unit_id?: int|null, options?: array<int, array{value: int|string, label: string}>}>>
      */
     private function options(): array
     {
@@ -248,10 +248,11 @@ class AdminPageController extends Controller
                 ->all(),
             'courses' => Course::query()
                 ->orderBy('name')
-                ->get(['id', 'name', 'code'])
+                ->get(['id', 'name', 'code', 'organization_unit_id'])
                 ->map(fn (Course $course): array => [
                     'value' => $course->id,
                     'label' => "{$course->code} · {$course->name}",
+                    'organization_unit_id' => $course->organization_unit_id,
                 ])
                 ->all(),
             'teachers' => Teacher::query()

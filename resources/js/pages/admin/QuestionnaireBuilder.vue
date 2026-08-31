@@ -93,7 +93,6 @@ const versionForm = useHttp<
         title: string;
         description: string | null;
         default_language: string;
-        min_answers_to_show_results: number;
     },
     ApiResponse<QuestionnaireVersion>
 >({
@@ -102,7 +101,6 @@ const versionForm = useHttp<
     title: '',
     description: null,
     default_language: 'de',
-    min_answers_to_show_results: 5,
 });
 
 const moduleLinkForm = useHttp<
@@ -213,8 +211,6 @@ function syncVersionForm(): void {
         null;
     versionForm.default_language =
         selectedVersion.value?.default_language ?? 'de';
-    versionForm.min_answers_to_show_results =
-        selectedVersion.value?.min_answers_to_show_results ?? 5;
 }
 
 function showSuccess(message: string): void {
@@ -781,23 +777,6 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         :disabled="!isDraft"
                                         required
                                         maxlength="10"
-                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span
-                                        class="mb-1.5 block text-sm font-medium text-slate-700"
-                                    >
-                                        Mindestantworten für Ergebnisse
-                                    </span>
-                                    <input
-                                        v-model.number="
-                                            versionForm.min_answers_to_show_results
-                                        "
-                                        :disabled="!isDraft"
-                                        type="number"
-                                        min="1"
-                                        required
                                         class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>

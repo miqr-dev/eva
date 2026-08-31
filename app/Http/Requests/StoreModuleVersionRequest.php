@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ModuleTargetType;
 use Illuminate\Validation\Rule;
 
 class StoreModuleVersionRequest extends AdminRequest
@@ -18,6 +19,7 @@ class StoreModuleVersionRequest extends AdminRequest
                     $this->integer('module_id'),
                 ),
             ],
+            'target_type' => ['nullable', Rule::enum(ModuleTargetType::class)],
         ];
     }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router, useHttp, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
 import AppIcon from '@/components/AppIcon.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
@@ -41,6 +41,10 @@ type Option = {
     label: string;
 };
 
+type CourseOption = Option & {
+    organization_unit_id: number | null;
+};
+
 type OptionGroup = {
     label: string;
     options: Option[];
@@ -54,7 +58,7 @@ type PageOptions = {
     users: Option[];
     roles: Option[];
     permissions: Option[];
-    courses: Option[];
+    courses: CourseOption[];
     teachers: Option[];
     questionnaireVersions: Option[];
 };
@@ -462,12 +466,6 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 options: campaignStatuses,
                 default: 'draft',
             },
-            {
-                name: 'min_answers_to_show_results',
-                label: 'Mindestanzahl Antworten für Ergebnisse',
-                type: 'number',
-                default: 5,
-            },
         ],
     },
     berichtsvorlagen: {
@@ -607,6 +605,7 @@ const editingRecord = ref<DataRecord | null>(null);
 const generalError = ref('');
 const successMessage = ref('');
 let successTimer: ReturnType<typeof setTimeout> | null = null;
+let isPreparingForm = false;
 
 const definition = computed(() => definitions[props.resourceKey]);
 const form = useHttp<FormPayload, ApiResourceResponse>({});
@@ -632,6 +631,21 @@ watch(
 );
 
 watch(
+    () => (props.resourceKey === 'evaluationen' ? form.organization_unit_id : null),
+    (organizationUnitId, previousOrganizationUnitId) => {
+        if (
+            isPreparingForm ||
+            previousOrganizationUnitId === undefined ||
+            organizationUnitId === previousOrganizationUnitId
+        ) {
+            return;
+        }
+
+        form.course_id = null;
+    },
+);
+
+watch(
     () => props.resourceKey,
     () => {
         search.value = '';
@@ -642,6 +656,20 @@ watch(
 );
 
 function fieldOptions(field: FieldDefinition): OptionEntry[] {
+    if (
+        props.resourceKey === 'evaluationen' &&
+        field.name === 'course_id'
+    ) {
+        const organizationUnitId = form.organization_unit_id;
+
+        return organizationUnitId
+            ? props.options.courses.filter(
+                  (course) =>
+                      course.organization_unit_id === organizationUnitId,
+              )
+            : [];
+    }
+
     if (field.optionsKey) {
         return props.options[field.optionsKey];
     }
@@ -728,12 +756,17 @@ function valueForField(field: FieldDefinition, record?: DataRecord): FormValue {
 }
 
 function prepareForm(record?: DataRecord): void {
+    isPreparingForm = true;
     form.clearErrors();
     generalError.value = '';
 
     for (const field of definition.value.fields) {
         form[field.name] = valueForField(field, record);
     }
+
+    void nextTick(() => {
+        isPreparingForm = false;
+    });
 }
 
 function openCreate(): void {

@@ -68,10 +68,7 @@ const steps: Step[] = [
         icon: 'puzzle',
         title: 'Modul anlegen',
         route: 'Verwaltung → Module',
-        actions: [
-            'Neuer Eintrag → Name, Beschreibung',
-            'Speichern (legt Entwurf Version 1 an)',
-        ],
+        actions: ['Neuer Eintrag → Name, Beschreibung', 'Speichern'],
     },
     {
         number: 4,
@@ -80,7 +77,8 @@ const steps: Step[] = [
         title: 'Fragen erfassen',
         route: 'Verwaltung → Frageneditor',
         actions: [
-            'Modul wählen → Abschnitt(e) und Fragen anlegen',
+            'Modul wählen → Entwurfsversion anlegen, Ziel wählen',
+            'Abschnitt(e) und Fragen anlegen',
             'Modulversion veröffentlichen',
         ],
     },

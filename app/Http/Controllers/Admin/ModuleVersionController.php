@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PublicationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreModuleVersionRequest;
+use App\Http\Requests\UpdateModuleVersionRequest;
 use App\Http\Resources\ModuleVersionEditorResource;
 use App\Models\Module;
 use App\Models\ModuleSection;
@@ -53,7 +54,7 @@ class ModuleVersionController extends Controller
                 'description' => $sourceAttributes['description'],
                 'status' => PublicationStatus::Draft,
                 'default_language' => $sourceAttributes['default_language'],
-                'target_type' => $sourceAttributes['target_type'],
+                'target_type' => $request->input('target_type') ?? $sourceAttributes['target_type'],
                 'created_by_id' => $request->user()->id,
                 'published_at' => null,
             ]);
@@ -64,6 +65,23 @@ class ModuleVersionController extends Controller
 
             return $version;
         });
+
+        return new ModuleVersionEditorResource(
+            $moduleVersion->load('sections.questions.options'),
+        );
+    }
+
+    public function update(
+        UpdateModuleVersionRequest $request,
+        ModuleVersion $moduleVersion,
+    ): ModuleVersionEditorResource {
+        if ($moduleVersion->getRawOriginal('status') !== PublicationStatus::Draft->value) {
+            throw ValidationException::withMessages([
+                'module_version_id' => 'Nur Entwurfsversionen können geändert werden.',
+            ]);
+        }
+
+        $moduleVersion->update($request->validated());
 
         return new ModuleVersionEditorResource(
             $moduleVersion->load('sections.questions.options'),

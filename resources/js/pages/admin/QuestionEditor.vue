@@ -88,11 +88,23 @@ const generalError = ref('');
 let successTimer: ReturnType<typeof setTimeout> | null = null;
 
 const cloneForm = useHttp<
-    { module_id: number | null; source_version_id: number | null },
+    {
+        module_id: number | null;
+        source_version_id: number | null;
+        target_type: string;
+    },
     ApiResponse<ModuleVersion>
 >({
     module_id: null,
     source_version_id: null,
+    target_type: 'none',
+});
+
+const targetForm = useHttp<
+    { target_type: string },
+    ApiResponse<ModuleVersion>
+>({
+    target_type: 'none',
 });
 
 const publishForm = useHttp<Record<string, never>, ApiResponse<ModuleVersion>>(
@@ -188,11 +200,28 @@ const questionTypes = [
     { value: 'yes_no', label: 'Ja / Nein' },
 ];
 
+const targetTypeOptions = [
+    { value: 'none', label: 'Kein Ziel' },
+    { value: 'course', label: 'Kurs' },
+    { value: 'organization', label: 'Standort' },
+    { value: 'teacher', label: 'Lehrperson' },
+];
+
 watch(
     selectedModuleId,
     () => {
         selectPreferredVersion();
         closeEditors();
+    },
+    { immediate: true },
+);
+
+watch(
+    selectedVersionId,
+    () => {
+        cloneForm.target_type = selectedVersion.value?.target_type ?? 'none';
+        targetForm.clearErrors();
+        targetForm.target_type = selectedVersion.value?.target_type ?? 'none';
     },
     { immediate: true },
 );
@@ -230,12 +259,8 @@ function statusLabel(status: string): string {
 
 function targetLabel(target: string): string {
     return (
-        {
-            none: 'Keine Wiederholung',
-            course: 'Pro Kurs',
-            organization: 'Pro Standort',
-            teacher: 'Pro Lehrperson',
-        }[target] ?? target
+        targetTypeOptions.find((option) => option.value === target)?.label ??
+        target
     );
 }
 
@@ -298,6 +323,24 @@ function replaceSelectedVersion(version: ModuleVersion): void {
     }
 
     selectedVersionId.value = version.id;
+}
+
+async function updateTargetType(targetType: string): Promise<void> {
+    if (!selectedVersion.value || !isDraft.value) {
+        return;
+    }
+
+    generalError.value = '';
+    targetForm.target_type = targetType;
+
+    await targetForm.submit(moduleVersions.update(selectedVersion.value.id), {
+        onSuccess: (response) => {
+            replaceSelectedVersion(response.data);
+            showSuccess('Das Ziel wurde gespeichert.');
+        },
+        onHttpException: requestFailed,
+        onNetworkError: requestFailed,
+    });
 }
 
 async function publishVersion(): Promise<void> {
@@ -585,7 +628,7 @@ function errorFor(name: string): string | null {
 
             <template v-else>
                 <section
-                    class="mt-7 grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:grid-cols-[1fr_1fr_auto] lg:items-end"
+                    class="mt-7 grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
                 >
                     <label class="block">
                         <span
@@ -634,6 +677,26 @@ function errorFor(name: string): string | null {
                         </select>
                     </label>
 
+                    <label class="block">
+                        <span
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Ziel der neuen Version
+                        </span>
+                        <select
+                            v-model="cloneForm.target_type"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                        >
+                            <option
+                                v-for="option in targetTypeOptions"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </option>
+                        </select>
+                    </label>
+
                     <button
                         type="button"
                         :disabled="cloneForm.processing"
@@ -675,11 +738,47 @@ function errorFor(name: string): string | null {
                                     {{ statusLabel(selectedVersion.status) }}
                                 </span>
                             </div>
-                            <p class="mt-2 text-sm text-slate-500">
-                                {{ selectedVersion.sections.length }} Abschnitte
-                                · {{ totalQuestions }} Fragen ·
-                                {{ targetLabel(selectedVersion.target_type) }}
-                            </p>
+                            <div
+                                class="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500"
+                            >
+                                <span>
+                                    {{ selectedVersion.sections.length }}
+                                    Abschnitte · {{ totalQuestions }} Fragen
+                                </span>
+                                <span>·</span>
+                                <span
+                                    v-if="!isDraft"
+                                    class="font-medium text-slate-700"
+                                >
+                                    Ziel:
+                                    {{ targetLabel(selectedVersion.target_type) }}
+                                </span>
+                                <label
+                                    v-else
+                                    class="inline-flex items-center gap-1.5"
+                                >
+                                    <span>Ziel:</span>
+                                    <select
+                                        :value="selectedVersion.target_type"
+                                        class="h-8 rounded-lg border border-slate-200 bg-white px-2 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                                        @change="
+                                            updateTargetType(
+                                                (
+                                                    $event.target as HTMLSelectElement
+                                                ).value,
+                                            )
+                                        "
+                                    >
+                                        <option
+                                            v-for="option in targetTypeOptions"
+                                            :key="option.value"
+                                            :value="option.value"
+                                        >
+                                            {{ option.label }}
+                                        </option>
+                                    </select>
+                                </label>
+                            </div>
                         </div>
 
                         <div

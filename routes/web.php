@@ -94,7 +94,7 @@ Route::middleware('auth')
             'email-templates' => EmailTemplateController::class,
         ]);
         Route::apiResource('module-versions', ModuleVersionController::class)
-            ->only('store');
+            ->only(['store', 'update']);
         Route::patch(
             'module-versions/{module_version}/publish',
             [ModuleVersionController::class, 'publish'],

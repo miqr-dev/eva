@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             AccessControlSeeder::class,
             OrganizationUnitSeeder::class,
             UserSeeder::class,
-            DemoEvaluationSeeder::class,
         ]);
     }
 }
