@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuestionEditorModuleResource;
+use App\Http\Resources\TeacherRoleResource;
 use App\Models\Module;
+use App\Models\TeacherRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,8 +31,14 @@ class QuestionEditorController extends Controller
             ->response($request)
             ->getData(true);
 
+        $teacherRoles = TeacherRole::query()->orderBy('name')->get();
+        $teacherRoleData = TeacherRoleResource::collection($teacherRoles)
+            ->response($request)
+            ->getData(true);
+
         return Inertia::render('admin/QuestionEditor', [
             'modules' => $responseData['data'] ?? [],
+            'teacherRoles' => $teacherRoleData['data'] ?? [],
         ]);
     }
 }

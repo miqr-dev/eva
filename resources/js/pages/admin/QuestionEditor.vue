@@ -26,6 +26,7 @@ type Question = {
     scale_max: number | null;
     scale_min_label: string | null;
     scale_max_label: string | null;
+    scale_labels: (string | null)[] | null;
     is_required: boolean;
     sort_order: number;
     options: QuestionOption[];
@@ -49,8 +50,15 @@ type ModuleVersion = {
     status: string;
     default_language: string;
     target_type: string;
+    target_role_id: number | null;
+    target_role: { id: number; name: string } | null;
     published_at: string | null;
     sections: ModuleSection[];
+};
+
+type TeacherRoleOption = {
+    id: number;
+    name: string;
 };
 
 type EditorModule = {
@@ -69,8 +77,17 @@ type DeleteTarget =
     | { kind: 'section'; item: ModuleSection }
     | { kind: 'question'; item: Question };
 
+const DEFAULT_FIVE_POINT_SCALE_LABELS = [
+    'Stimme nicht zu',
+    'Stimme überwiegend nicht zu',
+    'Neutral',
+    'Stimme überwiegend zu',
+    'Stimme zu',
+];
+
 const props = defineProps<{
     modules: EditorModule[];
+    teacherRoles: TeacherRoleOption[];
 }>();
 
 const localModules = ref<EditorModule[]>(
@@ -92,19 +109,29 @@ const cloneForm = useHttp<
         module_id: number | null;
         source_version_id: number | null;
         target_type: string;
+        target_role_id: number | null;
     },
     ApiResponse<ModuleVersion>
 >({
     module_id: null,
     source_version_id: null,
     target_type: 'none',
+    target_role_id: null,
 });
 
 const targetForm = useHttp<
-    { target_type: string },
+    { target_type: string; target_role_id: number | null },
     ApiResponse<ModuleVersion>
 >({
     target_type: 'none',
+    target_role_id: null,
+});
+
+const descriptionForm = useHttp<
+    { description: string | null },
+    ApiResponse<ModuleVersion>
+>({
+    description: null,
 });
 
 const publishForm = useHttp<Record<string, never>, ApiResponse<ModuleVersion>>(
@@ -131,8 +158,7 @@ const questionForm = useHttp<
         question_type: string;
         scale_min: number | null;
         scale_max: number | null;
-        scale_min_label: string | null;
-        scale_max_label: string | null;
+        scale_labels: string[];
         is_required: boolean;
         options: string[];
     },
@@ -143,9 +169,8 @@ const questionForm = useHttp<
     question_type: 'scale',
     scale_min: 1,
     scale_max: 5,
-    scale_min_label: 'Stimme überhaupt nicht zu',
-    scale_max_label: 'Stimme voll zu',
-    is_required: true,
+    scale_labels: [...DEFAULT_FIVE_POINT_SCALE_LABELS],
+    is_required: false,
     options: [],
 });
 
@@ -220,8 +245,14 @@ watch(
     selectedVersionId,
     () => {
         cloneForm.target_type = selectedVersion.value?.target_type ?? 'none';
+        cloneForm.target_role_id =
+            selectedVersion.value?.target_role_id ?? null;
         targetForm.clearErrors();
         targetForm.target_type = selectedVersion.value?.target_type ?? 'none';
+        targetForm.target_role_id =
+            selectedVersion.value?.target_role_id ?? null;
+        descriptionForm.clearErrors();
+        descriptionForm.description = selectedVersion.value?.description ?? null;
     },
     { immediate: true },
 );
@@ -326,12 +357,26 @@ function replaceSelectedVersion(version: ModuleVersion): void {
 }
 
 async function updateTargetType(targetType: string): Promise<void> {
+    targetForm.target_type = targetType;
+
+    if (targetType !== 'teacher') {
+        targetForm.target_role_id = null;
+    }
+
+    await saveTarget();
+}
+
+async function updateTargetRole(targetRoleId: string): Promise<void> {
+    targetForm.target_role_id = targetRoleId ? Number(targetRoleId) : null;
+    await saveTarget();
+}
+
+async function saveTarget(): Promise<void> {
     if (!selectedVersion.value || !isDraft.value) {
         return;
     }
 
     generalError.value = '';
-    targetForm.target_type = targetType;
 
     await targetForm.submit(moduleVersions.update(selectedVersion.value.id), {
         onSuccess: (response) => {
@@ -341,6 +386,26 @@ async function updateTargetType(targetType: string): Promise<void> {
         onHttpException: requestFailed,
         onNetworkError: requestFailed,
     });
+}
+
+async function saveDescription(): Promise<void> {
+    if (!selectedVersion.value || !isDraft.value) {
+        return;
+    }
+
+    generalError.value = '';
+
+    await descriptionForm.submit(
+        moduleVersions.update(selectedVersion.value.id),
+        {
+            onSuccess: (response) => {
+                replaceSelectedVersion(response.data);
+                showSuccess('Die Einleitung wurde gespeichert.');
+            },
+            onHttpException: requestFailed,
+            onNetworkError: requestFailed,
+        },
+    );
 }
 
 async function publishVersion(): Promise<void> {
@@ -414,6 +479,48 @@ async function saveSection(): Promise<void> {
     });
 }
 
+function scalePointCount(min: number, max: number): number {
+    return Math.max(max - min + 1, 0);
+}
+
+function resolveScaleLabels(question: Question): (string | null)[] {
+    if (question.scale_labels && question.scale_labels.length > 0) {
+        return question.scale_labels;
+    }
+
+    const min = question.scale_min ?? 1;
+    const max = question.scale_max ?? min;
+    const labels: (string | null)[] = Array.from(
+        { length: scalePointCount(min, max) },
+        () => null,
+    );
+
+    if (labels.length > 0) {
+        labels[0] = question.scale_min_label;
+        labels[labels.length - 1] = question.scale_max_label;
+    }
+
+    return labels;
+}
+
+function onScaleRangeChange(): void {
+    const min = questionForm.scale_min ?? 1;
+    const max = questionForm.scale_max ?? min;
+    const pointCount = scalePointCount(min, max);
+    const current = questionForm.scale_labels;
+
+    if (pointCount === 5 && current.every((label) => !label)) {
+        questionForm.scale_labels = [...DEFAULT_FIVE_POINT_SCALE_LABELS];
+
+        return;
+    }
+
+    questionForm.scale_labels = Array.from(
+        { length: pointCount },
+        (_, index) => current[index] ?? '',
+    );
+}
+
 function resetQuestionForm(sectionId: number): void {
     questionForm.clearErrors();
     questionForm.module_section_id = sectionId;
@@ -421,9 +528,8 @@ function resetQuestionForm(sectionId: number): void {
     questionForm.question_type = 'scale';
     questionForm.scale_min = 1;
     questionForm.scale_max = 5;
-    questionForm.scale_min_label = 'Stimme überhaupt nicht zu';
-    questionForm.scale_max_label = 'Stimme voll zu';
-    questionForm.is_required = true;
+    questionForm.scale_labels = [...DEFAULT_FIVE_POINT_SCALE_LABELS];
+    questionForm.is_required = false;
     questionForm.options = [];
 }
 
@@ -441,8 +547,9 @@ function openEditQuestion(question: Question): void {
     questionForm.question_type = question.question_type;
     questionForm.scale_min = question.scale_min;
     questionForm.scale_max = question.scale_max;
-    questionForm.scale_min_label = question.scale_min_label;
-    questionForm.scale_max_label = question.scale_max_label;
+    questionForm.scale_labels = resolveScaleLabels(question).map(
+        (label) => label ?? '',
+    );
     questionForm.is_required = question.is_required;
     questionForm.options = question.options.map((option) => option.option_text);
     questionEditorOpen.value = true;
@@ -628,9 +735,9 @@ function errorFor(name: string): string | null {
 
             <template v-else>
                 <section
-                    class="mt-7 grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
+                    class="mt-7 flex flex-wrap items-end gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
-                    <label class="block">
+                    <label class="block w-56">
                         <span
                             class="mb-2 block text-sm font-medium text-slate-700"
                         >
@@ -650,7 +757,7 @@ function errorFor(name: string): string | null {
                         </select>
                     </label>
 
-                    <label class="block">
+                    <label class="block w-56">
                         <span
                             class="mb-2 block text-sm font-medium text-slate-700"
                         >
@@ -677,7 +784,7 @@ function errorFor(name: string): string | null {
                         </select>
                     </label>
 
-                    <label class="block">
+                    <label class="block w-56">
                         <span
                             class="mb-2 block text-sm font-medium text-slate-700"
                         >
@@ -686,6 +793,10 @@ function errorFor(name: string): string | null {
                         <select
                             v-model="cloneForm.target_type"
                             class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                            @change="
+                                cloneForm.target_type !== 'teacher' &&
+                                    (cloneForm.target_role_id = null)
+                            "
                         >
                             <option
                                 v-for="option in targetTypeOptions"
@@ -693,6 +804,30 @@ function errorFor(name: string): string | null {
                                 :value="option.value"
                             >
                                 {{ option.label }}
+                            </option>
+                        </select>
+                    </label>
+
+                    <label
+                        v-if="cloneForm.target_type === 'teacher'"
+                        class="block w-56"
+                    >
+                        <span
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Rolle
+                        </span>
+                        <select
+                            v-model="cloneForm.target_role_id"
+                            class="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                        >
+                            <option :value="null">Alle Lehrenden</option>
+                            <option
+                                v-for="role in props.teacherRoles"
+                                :key="role.id"
+                                :value="role.id"
+                            >
+                                {{ role.name }}
                             </option>
                         </select>
                     </label>
@@ -752,32 +887,69 @@ function errorFor(name: string): string | null {
                                 >
                                     Ziel:
                                     {{ targetLabel(selectedVersion.target_type) }}
-                                </span>
-                                <label
-                                    v-else
-                                    class="inline-flex items-center gap-1.5"
-                                >
-                                    <span>Ziel:</span>
-                                    <select
-                                        :value="selectedVersion.target_type"
-                                        class="h-8 rounded-lg border border-slate-200 bg-white px-2 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
-                                        @change="
-                                            updateTargetType(
-                                                (
-                                                    $event.target as HTMLSelectElement
-                                                ).value,
-                                            )
-                                        "
+                                    <template
+                                        v-if="selectedVersion.target_role"
                                     >
-                                        <option
-                                            v-for="option in targetTypeOptions"
-                                            :key="option.value"
-                                            :value="option.value"
+                                        ({{ selectedVersion.target_role.name }})
+                                    </template>
+                                </span>
+                                <template v-else>
+                                    <label class="inline-flex items-center gap-1.5">
+                                        <span>Ziel:</span>
+                                        <select
+                                            :value="selectedVersion.target_type"
+                                            class="h-8 rounded-lg border border-slate-200 bg-white px-2 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                                            @change="
+                                                updateTargetType(
+                                                    (
+                                                        $event.target as HTMLSelectElement
+                                                    ).value,
+                                                )
+                                            "
                                         >
-                                            {{ option.label }}
-                                        </option>
-                                    </select>
-                                </label>
+                                            <option
+                                                v-for="option in targetTypeOptions"
+                                                :key="option.value"
+                                                :value="option.value"
+                                            >
+                                                {{ option.label }}
+                                            </option>
+                                        </select>
+                                    </label>
+                                    <label
+                                        v-if="
+                                            selectedVersion.target_type ===
+                                            'teacher'
+                                        "
+                                        class="inline-flex items-center gap-1.5"
+                                    >
+                                        <span>Rolle:</span>
+                                        <select
+                                            :value="
+                                                selectedVersion.target_role_id
+                                            "
+                                            class="h-8 rounded-lg border border-slate-200 bg-white px-2 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                                            @change="
+                                                updateTargetRole(
+                                                    (
+                                                        $event.target as HTMLSelectElement
+                                                    ).value,
+                                                )
+                                            "
+                                        >
+                                            <option :value="null">
+                                                Alle Lehrenden
+                                            </option>
+                                            <option
+                                                v-for="role in props.teacherRoles"
+                                                :key="role.id"
+                                                :value="role.id"
+                                            >
+                                                {{ role.name }}
+                                            </option>
+                                        </select>
+                                    </label>
+                                </template>
                             </div>
                         </div>
 
@@ -812,6 +984,46 @@ function errorFor(name: string): string | null {
                                 {{ publishDisabledReason }}
                             </p>
                         </div>
+                    </div>
+
+                    <div class="border-b border-slate-200 px-6 py-5">
+                        <span
+                            class="mb-1.5 block text-sm font-medium text-slate-700"
+                        >
+                            Einleitung für Teilnehmende
+                        </span>
+                        <p class="mb-2 text-xs text-slate-500">
+                            Wird den Teilnehmenden vor den Fragen dieses
+                            Moduls angezeigt – keine Frage, sondern Begrüßung
+                            und Hinweise.
+                        </p>
+                        <template v-if="isDraft">
+                            <textarea
+                                v-model="descriptionForm.description"
+                                rows="3"
+                                placeholder="z. B. Begrüßung und Hinweise zum Ausfüllen dieses Abschnitts."
+                                class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                            />
+                            <div class="mt-3 flex justify-end">
+                                <button
+                                    type="button"
+                                    :disabled="descriptionForm.processing"
+                                    class="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+                                    @click="saveDescription"
+                                >
+                                    Einleitung speichern
+                                </button>
+                            </div>
+                        </template>
+                        <p
+                            v-else-if="selectedVersion.description"
+                            class="rounded-xl bg-slate-50 px-3 py-2 text-sm leading-6 text-slate-700"
+                        >
+                            {{ selectedVersion.description }}
+                        </p>
+                        <p v-else class="text-sm text-slate-400 italic">
+                            Keine Einleitung hinterlegt.
+                        </p>
                     </div>
 
                     <div
@@ -937,13 +1149,15 @@ function errorFor(name: string): string | null {
                                                 {{ question.scale_min }} bis
                                                 {{ question.scale_max }}:
                                                 {{
-                                                    question.scale_min_label ||
-                                                    'ohne Beschriftung'
-                                                }}
-                                                →
-                                                {{
-                                                    question.scale_max_label ||
-                                                    'ohne Beschriftung'
+                                                    resolveScaleLabels(
+                                                        question,
+                                                    )
+                                                        .map(
+                                                            (label) =>
+                                                                label ||
+                                                                'ohne Beschriftung',
+                                                        )
+                                                        .join(' → ')
                                                 }}
                                             </p>
                                             <div
@@ -1180,6 +1394,7 @@ function errorFor(name: string): string | null {
                                 type="number"
                                 required
                                 class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
+                                @change="onScaleRangeChange"
                             />
                         </label>
                         <label class="block">
@@ -1193,30 +1408,37 @@ function errorFor(name: string): string | null {
                                 type="number"
                                 required
                                 class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
+                                @change="onScaleRangeChange"
                             />
                         </label>
-                        <label class="block">
-                            <span
-                                class="mb-2 block text-sm font-medium text-slate-700"
+                        <div class="sm:col-span-2">
+                            <p
+                                class="mb-2 text-sm font-medium text-slate-700"
                             >
-                                Beschriftung Minimum
-                            </span>
-                            <input
-                                v-model="questionForm.scale_min_label"
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
-                            />
-                        </label>
-                        <label class="block">
-                            <span
-                                class="mb-2 block text-sm font-medium text-slate-700"
-                            >
-                                Beschriftung Maximum
-                            </span>
-                            <input
-                                v-model="questionForm.scale_max_label"
-                                class="h-11 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-teal-500"
-                            />
-                        </label>
+                                Beschriftung je Skalenpunkt
+                            </p>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <label
+                                    v-for="(_, index) in questionForm
+                                        .scale_labels"
+                                    :key="index"
+                                    class="block"
+                                >
+                                    <span
+                                        class="mb-1.5 block text-xs font-medium text-slate-500"
+                                    >
+                                        Punkt
+                                        {{ (questionForm.scale_min ?? 1) + index }}
+                                    </span>
+                                    <input
+                                        v-model="
+                                            questionForm.scale_labels[index]
+                                        "
+                                        class="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-teal-500"
+                                    />
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <div

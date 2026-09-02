@@ -68,7 +68,7 @@ class QuestionnaireVersionModuleController extends Controller
         });
 
         return new QuestionnaireBuilderModuleLinkResource(
-            $link->load('moduleVersion.module'),
+            $link->load(['moduleVersion.module', 'moduleVersion.targetRole']),
         );
     }
 
@@ -98,7 +98,7 @@ class QuestionnaireVersionModuleController extends Controller
         });
 
         return new QuestionnaireBuilderModuleLinkResource(
-            $questionnaireVersionModule->refresh()->load('moduleVersion.module'),
+            $questionnaireVersionModule->refresh()->load(['moduleVersion.module', 'moduleVersion.targetRole']),
         );
     }
 

@@ -12,8 +12,10 @@ import modules from '@/routes/admin/api/modules';
 import organizationUnits from '@/routes/admin/api/organization-units';
 import questionnaireTemplates from '@/routes/admin/api/questionnaire-templates';
 import reportTemplates from '@/routes/admin/api/report-templates';
+import teacherRoles from '@/routes/admin/api/teacher-roles';
 import teachers from '@/routes/admin/api/teachers';
 import users from '@/routes/admin/api/users';
+import { show as campaignPreview } from '@/routes/admin/evaluation-campaigns/preview';
 import { show as campaignTans } from '@/routes/admin/evaluation-campaigns/tans';
 import type { Auth } from '@/types/auth';
 
@@ -24,6 +26,7 @@ type ResourceKey =
     | 'benutzer'
     | 'kurse'
     | 'lehrende'
+    | 'rollen'
     | 'frageboegen'
     | 'module'
     | 'evaluationen'
@@ -59,6 +62,7 @@ type PageOptions = {
     roles: Option[];
     permissions: Option[];
     courses: CourseOption[];
+    teacherRoles: Option[];
     teachers: Option[];
     questionnaireVersions: Option[];
 };
@@ -78,6 +82,7 @@ type FieldDefinition = {
         | 'select'
         | 'multiselect'
         | 'checkbox'
+        | 'date'
         | 'datetime-local';
     options?: OptionEntry[];
     optionsKey?: keyof PageOptions;
@@ -270,13 +275,13 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
             {
                 name: 'starts_at',
                 label: 'Beginn',
-                type: 'datetime-local',
+                type: 'date',
                 nullable: true,
             },
             {
                 name: 'ends_at',
                 label: 'Ende',
-                type: 'datetime-local',
+                type: 'date',
                 nullable: true,
             },
             {
@@ -303,6 +308,7 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
         api: teachers,
         columns: [
             { label: 'Name', path: 'name' },
+            { label: 'Rolle', path: 'teacher_role.name' },
             { label: 'E-Mail-Adresse', path: 'email' },
             { label: 'Standort', path: 'organization_unit.name' },
             { label: 'Kurse', path: 'courses', format: 'list' },
@@ -310,6 +316,14 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
         ],
         fields: [
             { name: 'name', label: 'Name', type: 'text', required: true },
+            {
+                name: 'teacher_role_id',
+                label: 'Rolle',
+                type: 'select',
+                optionsKey: 'teacherRoles',
+                nullable: true,
+                placeholder: 'Keine Rolle',
+            },
             { name: 'email', label: 'E-Mail-Adresse', type: 'email' },
             {
                 name: 'user_id',
@@ -342,6 +356,18 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 default: true,
             },
         ],
+    },
+    rollen: {
+        title: 'Rollen',
+        singular: 'Rolle',
+        description:
+            'Jobtitel für Lehrende verwalten (z. B. Sozialpädagoge, Psychologe, Dozent).',
+        api: teacherRoles,
+        columns: [
+            { label: 'Name', path: 'name' },
+            { label: 'Lehrende', path: 'teachers_count' },
+        ],
+        fields: [{ name: 'name', label: 'Name', type: 'text', required: true }],
     },
     frageboegen: {
         title: 'Fragebögen',
@@ -450,13 +476,13 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
             {
                 name: 'starts_at',
                 label: 'Beginn',
-                type: 'datetime-local',
+                type: 'date',
                 nullable: true,
             },
             {
                 name: 'ends_at',
                 label: 'Ende',
-                type: 'datetime-local',
+                type: 'date',
                 nullable: true,
             },
             {
@@ -741,6 +767,10 @@ function valueForField(field: FieldDefinition, record?: DataRecord): FormValue {
 
     if (field.type === 'datetime-local' && typeof value === 'string') {
         return value.slice(0, 16);
+    }
+
+    if (field.type === 'date' && typeof value === 'string') {
+        return value.slice(0, 10);
     }
 
     if (
@@ -1140,6 +1170,16 @@ function isSelf(record: DataRecord): boolean {
                                 <div
                                     class="flex items-center justify-end gap-1"
                                 >
+                                    <Link
+                                        v-if="
+                                            props.resourceKey === 'evaluationen'
+                                        "
+                                        :href="campaignPreview(record.id)"
+                                        target="_blank"
+                                        class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-teal-700 transition hover:bg-teal-50"
+                                    >
+                                        Vorschau
+                                    </Link>
                                     <Link
                                         v-if="
                                             props.resourceKey === 'evaluationen'

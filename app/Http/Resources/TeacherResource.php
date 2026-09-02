@@ -20,6 +20,10 @@ class TeacherResource extends JsonResource
             'user_id' => $this->user_id,
             'organization_unit_id' => $this->organization_unit_id,
             'name' => $this->name,
+            'teacher_role_id' => $this->teacher_role_id,
+            'teacher_role' => new TeacherRoleResource(
+                $this->whenLoaded('teacherRole'),
+            ),
             'email' => $this->email,
             'is_active' => $this->is_active,
             'organization_unit' => new OrganizationUnitResource(

@@ -8,6 +8,7 @@ use App\Models\ModuleVersion;
 use App\Models\Permission;
 use App\Models\Question;
 use App\Models\QuestionOption;
+use App\Models\TeacherRole;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -146,6 +147,49 @@ test('empty draft module versions cannot be published', function () {
         ->patchJson(route('admin.api.module-versions.publish', $version))
         ->assertUnprocessable()
         ->assertJsonValidationErrors('questions');
+});
+
+test('a draft module version ziel and rolle can be updated via the api', function () {
+    $user = questionEditorUser();
+    $version = ModuleVersion::factory()->create([
+        'status' => PublicationStatus::Draft,
+        'target_type' => 'none',
+        'target_role_id' => null,
+    ]);
+    $role = TeacherRole::factory()->create(['name' => 'Arbeitspädagoge']);
+
+    $this->actingAs($user)->putJson(
+        route('admin.api.module-versions.update', $version),
+        [
+            'target_type' => 'teacher',
+            'target_role_id' => $role->id,
+        ],
+    )->assertSuccessful()
+        ->assertJsonPath('data.target_type', 'teacher')
+        ->assertJsonPath('data.target_role_id', $role->id)
+        ->assertJsonPath('data.target_role.name', $role->name);
+
+    expect($version->fresh())
+        ->target_role_id->toBe($role->id);
+});
+
+test('a module version introduction can be updated independently of ziel', function () {
+    $user = questionEditorUser();
+    $version = ModuleVersion::factory()->create([
+        'status' => PublicationStatus::Draft,
+        'target_type' => 'teacher',
+        'target_role_id' => TeacherRole::factory()->create()->id,
+    ]);
+
+    $this->actingAs($user)->putJson(
+        route('admin.api.module-versions.update', $version),
+        ['description' => 'Willkommen! Bitte antworten Sie ehrlich.'],
+    )->assertSuccessful()
+        ->assertJsonPath('data.description', 'Willkommen! Bitte antworten Sie ehrlich.');
+
+    expect($version->fresh())
+        ->description->toBe('Willkommen! Bitte antworten Sie ehrlich.')
+        ->target_type->toBe(\App\Enums\ModuleTargetType::Teacher);
 });
 
 test('published versions cannot be changed', function () {

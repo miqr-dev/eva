@@ -7,11 +7,16 @@ use App\Http\Requests\StoreEvaluationCampaignRequest;
 use App\Http\Requests\UpdateEvaluationCampaignRequest;
 use App\Http\Resources\EvaluationCampaignResource;
 use App\Models\EvaluationCampaign;
+use App\Services\EvaluationCampaignTargetSyncService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class EvaluationCampaignController extends Controller
 {
+    public function __construct(
+        private readonly EvaluationCampaignTargetSyncService $targetSyncService,
+    ) {}
+
     public function index(): AnonymousResourceCollection
     {
         $this->authorizePermission('campaigns.manage');
@@ -33,12 +38,14 @@ class EvaluationCampaignController extends Controller
             'created_by_id' => $request->user()->id,
         ]);
 
+        $this->targetSyncService->syncCourseTeachers($evaluationCampaign);
+
         return new EvaluationCampaignResource(
             $evaluationCampaign->load([
                 'organizationUnit',
                 'course',
                 'questionnaireVersion',
-            ]),
+            ])->loadCount('targets'),
         );
     }
 
@@ -63,13 +70,14 @@ class EvaluationCampaignController extends Controller
         EvaluationCampaign $evaluationCampaign,
     ): EvaluationCampaignResource {
         $evaluationCampaign->update($request->validated());
+        $this->targetSyncService->syncCourseTeachers($evaluationCampaign);
 
         return new EvaluationCampaignResource(
             $evaluationCampaign->load([
                 'organizationUnit',
                 'course',
                 'questionnaireVersion',
-            ]),
+            ])->loadCount('targets'),
         );
     }
 

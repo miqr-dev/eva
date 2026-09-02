@@ -79,7 +79,7 @@ class QuestionnaireVersionController extends Controller
         });
 
         return new QuestionnaireBuilderVersionResource(
-            $version->load('moduleLinks.moduleVersion.module'),
+            $version->load(['moduleLinks.moduleVersion.module', 'moduleLinks.moduleVersion.targetRole']),
         );
     }
 
@@ -92,7 +92,7 @@ class QuestionnaireVersionController extends Controller
         $questionnaireVersion->update($request->validated());
 
         return new QuestionnaireBuilderVersionResource(
-            $questionnaireVersion->load('moduleLinks.moduleVersion.module'),
+            $questionnaireVersion->load(['moduleLinks.moduleVersion.module', 'moduleLinks.moduleVersion.targetRole']),
         );
     }
 
@@ -118,7 +118,7 @@ class QuestionnaireVersionController extends Controller
         ]);
 
         return new QuestionnaireBuilderVersionResource(
-            $questionnaireVersion->load('moduleLinks.moduleVersion.module'),
+            $questionnaireVersion->load(['moduleLinks.moduleVersion.module', 'moduleLinks.moduleVersion.targetRole']),
         );
     }
 

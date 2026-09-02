@@ -29,8 +29,11 @@ class ModuleVersionController extends Controller
                 ->findOrFail($sourceVersionId)
             : null;
 
+        $validated = $request->validated();
+
         $moduleVersion = DB::transaction(function () use (
             $module,
+            $validated,
             $request,
             $source,
         ): ModuleVersion {
@@ -40,13 +43,16 @@ class ModuleVersionController extends Controller
                     'description' => $source->description,
                     'default_language' => $source->default_language,
                     'target_type' => $source->getRawOriginal('target_type'),
+                    'target_role_id' => $source->target_role_id,
                 ]
                 : [
                     'title' => $module->name,
                     'description' => $module->description,
                     'default_language' => 'de',
                     'target_type' => 'none',
+                    'target_role_id' => null,
                 ];
+            $targetType = $validated['target_type'] ?? $sourceAttributes['target_type'];
             $version = ModuleVersion::query()->create([
                 'module_id' => $module->id,
                 'version_number' => ((int) $module->versions()->max('version_number')) + 1,
@@ -54,7 +60,10 @@ class ModuleVersionController extends Controller
                 'description' => $sourceAttributes['description'],
                 'status' => PublicationStatus::Draft,
                 'default_language' => $sourceAttributes['default_language'],
-                'target_type' => $request->input('target_type') ?? $sourceAttributes['target_type'],
+                'target_type' => $targetType,
+                'target_role_id' => $targetType === 'teacher'
+                    ? ($validated['target_role_id'] ?? $sourceAttributes['target_role_id'])
+                    : null,
                 'created_by_id' => $request->user()->id,
                 'published_at' => null,
             ]);
@@ -67,7 +76,7 @@ class ModuleVersionController extends Controller
         });
 
         return new ModuleVersionEditorResource(
-            $moduleVersion->load('sections.questions.options'),
+            $moduleVersion->load(['sections.questions.options', 'targetRole']),
         );
     }
 
@@ -81,10 +90,18 @@ class ModuleVersionController extends Controller
             ]);
         }
 
-        $moduleVersion->update($request->validated());
+        $validated = $request->validated();
+
+        if (array_key_exists('target_type', $validated)) {
+            $validated['target_role_id'] = $validated['target_type'] === 'teacher'
+                ? ($validated['target_role_id'] ?? null)
+                : null;
+        }
+
+        $moduleVersion->update($validated);
 
         return new ModuleVersionEditorResource(
-            $moduleVersion->load('sections.questions.options'),
+            $moduleVersion->load(['sections.questions.options', 'targetRole']),
         );
     }
 
@@ -115,7 +132,7 @@ class ModuleVersionController extends Controller
         ]);
 
         return new ModuleVersionEditorResource(
-            $moduleVersion->load('sections.questions.options'),
+            $moduleVersion->load(['sections.questions.options', 'targetRole']),
         );
     }
 

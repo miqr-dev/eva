@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'user_id',
     'organization_unit_id',
     'name',
+    'teacher_role_id',
     'email',
     'is_active',
 ])]
@@ -31,6 +32,12 @@ class Teacher extends Model
     public function organizationUnit(): BelongsTo
     {
         return $this->belongsTo(OrganizationUnit::class);
+    }
+
+    /** @return BelongsTo<TeacherRole, $this> */
+    public function teacherRole(): BelongsTo
+    {
+        return $this->belongsTo(TeacherRole::class);
     }
 
     /** @return BelongsToMany<Course, $this> */

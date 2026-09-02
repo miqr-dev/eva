@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { store as submitEvaluation } from '@/routes/evaluation/form';
 import { create as enterTan } from '@/routes/evaluation/tan';
@@ -20,6 +20,7 @@ type EvaluationQuestion = {
     scale_max: number | null;
     scale_min_label: string | null;
     scale_max_label: string | null;
+    scale_labels: (string | null)[] | null;
     is_required: boolean;
     target_id: number | null;
     options: EvaluationOption[];
@@ -37,6 +38,7 @@ type EvaluationModule = {
     module_version_id: number;
     title: string;
     version_title: string;
+    description: string | null;
     repeat_mode: string;
     target_type: string;
     target: { id: number; type: string; label: string } | null;
@@ -62,8 +64,25 @@ type EvaluationForm = {
 
 type AnswerValue = string | number | null;
 
+type IntroStep = {
+    kind: 'intro';
+    key: string;
+    module: EvaluationModule;
+};
+
+type QuestionStep = {
+    kind: 'question';
+    key: string;
+    module: EvaluationModule;
+    section: EvaluationSection;
+    question: EvaluationQuestion;
+};
+
+type Step = IntroStep | QuestionStep;
+
 const props = defineProps<{
-    session: string;
+    session: string | null;
+    preview?: boolean;
     form: EvaluationForm;
 }>();
 
@@ -74,6 +93,104 @@ const responseForm = useForm<{
     language: props.form.questionnaire.default_language || 'de',
     answers: initialAnswers(),
 });
+
+const steps = computed<Step[]>(() => {
+    const result: Step[] = [];
+
+    for (const module of props.form.modules) {
+        const moduleKey = `${module.id}-${module.target?.id ?? 'once'}`;
+
+        if (module.description) {
+            result.push({ kind: 'intro', key: `${moduleKey}-intro`, module });
+        }
+
+        for (const section of module.sections) {
+            for (const question of section.questions) {
+                result.push({
+                    kind: 'question',
+                    key: question.answer_key,
+                    module,
+                    section,
+                    question,
+                });
+            }
+        }
+    }
+
+    return result;
+});
+
+const currentStepIndex = ref(0);
+const currentStepError = ref<string | null>(null);
+
+const currentStep = computed<Step | null>(
+    () => steps.value[currentStepIndex.value] ?? null,
+);
+
+const isLastStep = computed(
+    () => currentStepIndex.value === steps.value.length - 1,
+);
+
+const questionSteps = computed(() =>
+    steps.value.filter((step): step is QuestionStep => step.kind === 'question'),
+);
+
+const currentQuestionPosition = computed(() => {
+    if (currentStep.value?.kind !== 'question') {
+        return null;
+    }
+
+    return (
+        questionSteps.value.findIndex(
+            (step) => step.key === currentStep.value?.key,
+        ) + 1
+    );
+});
+
+const progressPercent = computed(() => {
+    if (steps.value.length === 0) {
+        return 0;
+    }
+
+    return Math.round(
+        ((currentStepIndex.value + 1) / steps.value.length) * 100,
+    );
+});
+
+function isAnswerEmpty(value: AnswerValue): boolean {
+    return value === null || value === '';
+}
+
+function goBack(): void {
+    currentStepError.value = null;
+
+    if (currentStepIndex.value > 0) {
+        currentStepIndex.value -= 1;
+    }
+}
+
+function goNext(): void {
+    currentStepError.value = null;
+
+    if (currentStep.value?.kind === 'question') {
+        const question = currentStep.value.question;
+        const answer = responseForm.answers[question.answer_key];
+
+        if (question.is_required && isAnswerEmpty(answer)) {
+            currentStepError.value = 'Diese Frage ist ein Pflichtfeld.';
+
+            return;
+        }
+    }
+
+    if (isLastStep.value) {
+        submit();
+
+        return;
+    }
+
+    currentStepIndex.value += 1;
+}
 
 function initialAnswers(): Record<string, AnswerValue> {
     const answers: Record<string, AnswerValue> = {};
@@ -98,6 +215,16 @@ function scaleValues(question: EvaluationQuestion): number[] {
         { length: Math.max(0, maximum - minimum + 1) },
         (_, index) => minimum + index,
     );
+}
+
+function scaleLabelFor(
+    question: EvaluationQuestion,
+    value: number,
+): string | null {
+    const minimum = question.scale_min ?? 1;
+    const index = value - minimum;
+
+    return question.scale_labels?.[index] ?? null;
 }
 
 function errorFor(answerKey: string): string | null {
@@ -127,8 +254,26 @@ const hasUnansweredRequiredQuestions = computed(
 );
 
 function submit(): void {
+    if (props.preview || !props.session) {
+        return;
+    }
+
     responseForm.submit(submitEvaluation(props.session));
 }
+
+const nextButtonLabel = computed(() => {
+    if (!isLastStep.value) {
+        return 'Weiter';
+    }
+
+    if (props.preview) {
+        return 'Vorschau (kein Absenden möglich)';
+    }
+
+    return responseForm.processing
+        ? 'Antworten werden gespeichert...'
+        : 'Evaluation absenden';
+});
 </script>
 
 <template>
@@ -136,6 +281,16 @@ function submit(): void {
 
     <main class="min-h-screen bg-gray-100 px-5 py-8 text-slate-900">
         <div class="mx-auto max-w-4xl">
+            <div
+                v-if="props.preview"
+                class="mb-4 flex items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-800"
+            >
+                <span>
+                    Vorschau-Modus &ndash; so sieht die Evaluation für
+                    Teilnehmende aus. Antworten werden nicht gespeichert.
+                </span>
+            </div>
+
             <header class="rounded-2xl bg-teal-800 p-7 text-white shadow-sm">
                 <p
                     class="text-xs font-semibold tracking-[0.22em] text-teal-300 uppercase"
@@ -182,204 +337,276 @@ function submit(): void {
                 </p>
             </div>
 
-            <form class="mt-6 space-y-6" @submit.prevent="submit">
-                <section
-                    v-for="module in props.form.modules"
-                    :key="`${module.id}-${module.target?.id ?? 'once'}`"
-                    class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+            <div
+                v-if="steps.length === 0"
+                class="mt-6 rounded-3xl border border-slate-200 bg-white p-10 text-center text-slate-500"
+            >
+                Dieser Fragebogen enthält aktuell keine Fragen.
+            </div>
+
+            <form v-else class="mt-6" @submit.prevent="goNext">
+                <div
+                    class="flex items-center justify-between text-xs font-medium text-slate-500"
                 >
-                    <div class="border-b border-slate-200 px-6 py-5">
+                    <span>
+                        {{
+                            currentQuestionPosition
+                                ? `Frage ${currentQuestionPosition} von ${questionSteps.length}`
+                                : 'Einleitung'
+                        }}
+                    </span>
+                    <span>Schritt {{ currentStepIndex + 1 }} von {{ steps.length }}</span>
+                </div>
+                <div
+                    class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200"
+                >
+                    <div
+                        class="h-full rounded-full bg-teal-600 transition-all duration-300"
+                        :style="{ width: `${progressPercent}%` }"
+                    />
+                </div>
+
+                <section
+                    v-if="currentStep"
+                    :key="currentStep.key"
+                    class="mt-5 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                >
+                    <div v-if="currentStep.kind === 'intro'" class="px-6 py-8">
                         <p
                             class="text-xs font-semibold tracking-[0.18em] text-teal-600 uppercase"
                         >
                             Modul
                         </p>
                         <h2 class="mt-2 text-xl font-semibold text-slate-900">
-                            {{ module.title }}
-                            <span v-if="module.target">
-                                - {{ module.target.label }}
+                            {{ currentStep.module.title }}
+                            <span v-if="currentStep.module.target">
+                                - {{ currentStep.module.target.label }}
                             </span>
                         </h2>
+                        <p
+                            class="mt-4 rounded-xl bg-teal-50 px-4 py-3 text-sm leading-6 text-teal-900"
+                        >
+                            {{ currentStep.module.description }}
+                        </p>
                     </div>
 
-                    <div class="divide-y divide-slate-100">
-                        <section
-                            v-for="section in module.sections"
-                            :key="section.id"
-                            class="px-6 py-5"
+                    <div v-else class="px-6 py-6">
+                        <p
+                            class="text-xs font-semibold tracking-[0.18em] text-teal-600 uppercase"
                         >
-                            <h3 class="font-semibold text-slate-900">
-                                {{ section.title }}
-                            </h3>
-                            <p
-                                v-if="section.description"
-                                class="mt-1 text-sm leading-6 text-slate-500"
+                            Modul
+                        </p>
+                        <h2 class="mt-1 text-lg font-semibold text-slate-900">
+                            {{ currentStep.module.title }}
+                            <span v-if="currentStep.module.target">
+                                - {{ currentStep.module.target.label }}
+                            </span>
+                        </h2>
+                        <p
+                            class="mt-3 text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase"
+                        >
+                            Abschnitt
+                        </p>
+                        <h3 class="mt-1 font-semibold text-slate-900">
+                            {{ currentStep.section.title }}
+                        </h3>
+                        <p
+                            v-if="currentStep.section.description"
+                            class="mt-1 text-sm leading-6 text-slate-500"
+                        >
+                            {{ currentStep.section.description }}
+                        </p>
+
+                        <article
+                            class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                        >
+                            <div
+                                class="flex items-start justify-between gap-4"
                             >
-                                {{ section.description }}
-                            </p>
-
-                            <div class="mt-5 space-y-6">
-                                <article
-                                    v-for="question in section.questions"
-                                    :key="question.answer_key"
-                                    class="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                                <p
+                                    class="leading-6 font-medium text-slate-900"
                                 >
-                                    <div
-                                        class="flex items-start justify-between gap-4"
+                                    {{ currentStep.question.question_text }}
+                                </p>
+                                <span
+                                    v-if="currentStep.question.is_required"
+                                    class="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600"
+                                >
+                                    Pflicht
+                                </span>
+                            </div>
+
+                            <div
+                                v-if="
+                                    currentStep.question.question_type ===
+                                    'scale'
+                                "
+                                class="mt-4"
+                            >
+                                <div class="flex items-stretch gap-2">
+                                    <label
+                                        v-for="value in scaleValues(
+                                            currentStep.question,
+                                        )"
+                                        :key="value"
+                                        class="flex flex-1 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-center text-sm font-semibold"
                                     >
-                                        <p
-                                            class="leading-6 font-medium text-slate-900"
-                                        >
-                                            {{ question.question_text }}
-                                        </p>
                                         <span
-                                            v-if="question.is_required"
-                                            class="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600"
+                                            v-if="
+                                                scaleLabelFor(
+                                                    currentStep.question,
+                                                    value,
+                                                )
+                                            "
+                                            class="text-xs font-medium text-slate-500"
                                         >
-                                            Pflicht
+                                            {{
+                                                scaleLabelFor(
+                                                    currentStep.question,
+                                                    value,
+                                                )
+                                            }}
                                         </span>
-                                    </div>
+                                        <input
+                                            v-model="
+                                                responseForm.answers[
+                                                    currentStep.question
+                                                        .answer_key
+                                                ]
+                                            "
+                                            type="radio"
+                                            :name="
+                                                currentStep.question.answer_key
+                                            "
+                                            :value="value"
+                                            class="h-4 w-4 text-teal-600 focus:ring-teal-500"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
 
-                                    <div
-                                        v-if="
-                                            question.question_type === 'scale'
-                                        "
-                                        class="mt-4"
-                                    >
-                                        <div class="flex flex-wrap gap-2">
-                                            <label
-                                                v-for="value in scaleValues(
-                                                    question,
-                                                )"
-                                                :key="value"
-                                                class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
-                                            >
-                                                <input
-                                                    v-model="
-                                                        responseForm.answers[
-                                                            question.answer_key
-                                                        ]
-                                                    "
-                                                    type="radio"
-                                                    :name="question.answer_key"
-                                                    :value="value"
-                                                    class="text-teal-600 focus:ring-teal-500"
-                                                />
-                                                {{ value }}
-                                            </label>
-                                        </div>
-                                        <div
-                                            class="mt-2 flex justify-between gap-4 text-xs text-slate-500"
-                                        >
-                                            <span>{{
-                                                question.scale_min_label
-                                            }}</span>
-                                            <span>{{
-                                                question.scale_max_label
-                                            }}</span>
-                                        </div>
-                                    </div>
+                            <textarea
+                                v-else-if="
+                                    currentStep.question.question_type ===
+                                    'free_text'
+                                "
+                                v-model="
+                                    responseForm.answers[
+                                        currentStep.question.answer_key
+                                    ]
+                                "
+                                rows="4"
+                                class="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                            />
 
-                                    <textarea
-                                        v-else-if="
-                                            question.question_type ===
-                                            'free_text'
-                                        "
+                            <div
+                                v-else-if="
+                                    currentStep.question.question_type ===
+                                    'yes_no'
+                                "
+                                class="mt-4 flex flex-wrap gap-3"
+                            >
+                                <label
+                                    class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
+                                >
+                                    <input
                                         v-model="
                                             responseForm.answers[
-                                                question.answer_key
+                                                currentStep.question.answer_key
                                             ]
                                         "
-                                        rows="4"
-                                        class="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
-                                    />
-
-                                    <div
-                                        v-else-if="
-                                            question.question_type === 'yes_no'
+                                        type="radio"
+                                        :name="
+                                            currentStep.question.answer_key
                                         "
-                                        class="mt-4 flex flex-wrap gap-3"
-                                    >
-                                        <label
-                                            class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
-                                        >
-                                            <input
-                                                v-model="
-                                                    responseForm.answers[
-                                                        question.answer_key
-                                                    ]
-                                                "
-                                                type="radio"
-                                                :name="question.answer_key"
-                                                value="yes"
-                                                class="text-teal-600 focus:ring-teal-500"
-                                            />
-                                            Ja
-                                        </label>
-                                        <label
-                                            class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
-                                        >
-                                            <input
-                                                v-model="
-                                                    responseForm.answers[
-                                                        question.answer_key
-                                                    ]
-                                                "
-                                                type="radio"
-                                                :name="question.answer_key"
-                                                value="no"
-                                                class="text-teal-600 focus:ring-teal-500"
-                                            />
-                                            Nein
-                                        </label>
-                                    </div>
-
-                                    <div v-else class="mt-4 grid gap-2">
-                                        <label
-                                            v-for="option in question.options"
-                                            :key="option.id"
-                                            class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
-                                        >
-                                            <input
-                                                v-model="
-                                                    responseForm.answers[
-                                                        question.answer_key
-                                                    ]
-                                                "
-                                                type="radio"
-                                                :name="question.answer_key"
-                                                :value="option.id"
-                                                class="text-teal-600 focus:ring-teal-500"
-                                            />
-                                            {{ option.label }}
-                                        </label>
-                                    </div>
-
-                                    <p
-                                        v-if="errorFor(question.answer_key)"
-                                        class="mt-3 text-sm font-medium text-red-600"
-                                    >
-                                        {{ errorFor(question.answer_key) }}
-                                    </p>
-                                </article>
+                                        value="yes"
+                                        class="text-teal-600 focus:ring-teal-500"
+                                    />
+                                    Ja
+                                </label>
+                                <label
+                                    class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
+                                >
+                                    <input
+                                        v-model="
+                                            responseForm.answers[
+                                                currentStep.question.answer_key
+                                            ]
+                                        "
+                                        type="radio"
+                                        :name="
+                                            currentStep.question.answer_key
+                                        "
+                                        value="no"
+                                        class="text-teal-600 focus:ring-teal-500"
+                                    />
+                                    Nein
+                                </label>
                             </div>
-                        </section>
+
+                            <div v-else class="mt-4 grid gap-2">
+                                <label
+                                    v-for="option in currentStep.question
+                                        .options"
+                                    :key="option.id"
+                                    class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold"
+                                >
+                                    <input
+                                        v-model="
+                                            responseForm.answers[
+                                                currentStep.question.answer_key
+                                            ]
+                                        "
+                                        type="radio"
+                                        :name="
+                                            currentStep.question.answer_key
+                                        "
+                                        :value="option.id"
+                                        class="text-teal-600 focus:ring-teal-500"
+                                    />
+                                    {{ option.label }}
+                                </label>
+                            </div>
+
+                            <p
+                                v-if="currentStepError"
+                                class="mt-3 text-sm font-medium text-red-600"
+                            >
+                                {{ currentStepError }}
+                            </p>
+                            <p
+                                v-else-if="
+                                    errorFor(currentStep.question.answer_key)
+                                "
+                                class="mt-3 text-sm font-medium text-red-600"
+                            >
+                                {{ errorFor(currentStep.question.answer_key) }}
+                            </p>
+                        </article>
                     </div>
                 </section>
 
                 <div
-                    class="sticky bottom-4 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur"
+                    class="sticky bottom-4 mt-5 flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur"
                 >
                     <button
-                        type="submit"
-                        :disabled="responseForm.processing"
-                        class="h-12 w-full rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+                        v-if="currentStepIndex > 0"
+                        type="button"
+                        class="h-12 rounded-lg border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                        @click="goBack"
                     >
-                        {{
-                            responseForm.processing
-                                ? 'Antworten werden gespeichert...'
-                                : 'Evaluation absenden'
-                        }}
+                        Zurück
+                    </button>
+                    <span v-else />
+                    <button
+                        type="submit"
+                        :disabled="
+                            responseForm.processing ||
+                            (isLastStep && props.preview)
+                        "
+                        class="h-12 flex-1 rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                        {{ nextButtonLabel }}
                     </button>
                 </div>
             </form>

@@ -21,6 +21,8 @@ class StoreQuestionRequest extends AdminRequest
             'scale_max' => [Rule::requiredIf($isScale), 'nullable', 'integer', 'gt:scale_min'],
             'scale_min_label' => ['nullable', 'string', 'max:255'],
             'scale_max_label' => ['nullable', 'string', 'max:255'],
+            'scale_labels' => ['nullable', 'array'],
+            'scale_labels.*' => ['nullable', 'string', 'max:255'],
             'is_required' => ['sometimes', 'boolean'],
             'options' => [
                 Rule::when(

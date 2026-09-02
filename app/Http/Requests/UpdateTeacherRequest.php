@@ -25,6 +25,7 @@ class UpdateTeacherRequest extends AdminRequest
             ],
             'organization_unit_id' => ['sometimes', 'required', 'integer', 'exists:organization_units,id'],
             'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'teacher_role_id' => ['nullable', 'integer', 'exists:teacher_roles,id'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
             'course_ids' => ['sometimes', 'array'],

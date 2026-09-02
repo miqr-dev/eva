@@ -8,6 +8,7 @@ use App\Models\EvaluationCampaignTarget;
 use App\Models\ModuleSection;
 use App\Models\Question;
 use App\Models\QuestionnaireVersionModule;
+use App\Models\Teacher;
 
 class QuestionnaireRenderService
 {
@@ -19,7 +20,7 @@ class QuestionnaireRenderService
         $campaign->loadMissing([
             'questionnaireVersion.moduleLinks.moduleVersion.module',
             'questionnaireVersion.moduleLinks.moduleVersion.sections.questions.options',
-            'targets',
+            'targets.target',
         ]);
 
         return [
@@ -58,7 +59,8 @@ class QuestionnaireRenderService
             return [$this->renderModule($moduleLink)];
         }
 
-        $targetType = $moduleLink->moduleVersion->getRawOriginal('target_type');
+        $moduleVersion = $moduleLink->moduleVersion;
+        $targetType = $moduleVersion->getRawOriginal('target_type');
 
         if ($targetType === 'none') {
             return [$this->renderModule($moduleLink)];
@@ -66,6 +68,10 @@ class QuestionnaireRenderService
 
         return $campaign->targets
             ->where('target_type', $targetType)
+            ->filter(fn (EvaluationCampaignTarget $target): bool => $targetType !== 'teacher'
+                || $moduleVersion->target_role_id === null
+                || ($target->target instanceof Teacher
+                    && $target->target->teacher_role_id === $moduleVersion->target_role_id))
             ->map(fn (EvaluationCampaignTarget $target): array => $this->renderModule(
                 $moduleLink,
                 $target,
@@ -88,6 +94,7 @@ class QuestionnaireRenderService
             'module_version_id' => $moduleVersion->id,
             'title' => $moduleVersion->module->name ?? $moduleVersion->title,
             'version_title' => $moduleVersion->title,
+            'description' => $moduleVersion->description,
             'repeat_mode' => $moduleLink->getRawOriginal('repeat_mode'),
             'target_type' => $moduleVersion->getRawOriginal('target_type'),
             'target' => $target instanceof EvaluationCampaignTarget
@@ -131,6 +138,7 @@ class QuestionnaireRenderService
             'scale_max' => $question->scale_max,
             'scale_min_label' => $question->scale_min_label,
             'scale_max_label' => $question->scale_max_label,
+            'scale_labels' => $this->scaleLabels($question),
             'is_required' => $question->is_required,
             'target_id' => $target?->id,
             'options' => $question->options
@@ -142,6 +150,30 @@ class QuestionnaireRenderService
                 ->values()
                 ->all(),
         ];
+    }
+
+    /**
+     * @return array<int, string|null>|null
+     */
+    private function scaleLabels(Question $question): ?array
+    {
+        if (is_array($question->scale_labels)) {
+            return $question->scale_labels;
+        }
+
+        if ($question->scale_min === null || $question->scale_max === null) {
+            return null;
+        }
+
+        $pointCount = $question->scale_max - $question->scale_min + 1;
+        $labels = array_fill(0, max($pointCount, 0), null);
+
+        if ($labels !== []) {
+            $labels[0] = $question->scale_min_label;
+            $labels[count($labels) - 1] = $question->scale_max_label;
+        }
+
+        return $labels;
     }
 
     private function answerKey(

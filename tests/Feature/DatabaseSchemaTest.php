@@ -95,8 +95,9 @@ test('seeds real organization units and super administrator', function () {
     $this->seed(DatabaseSeeder::class);
 
     $organizationUnits = [
+        'Berlin' => ['Berlin PrenzlauerPromenade', 'Berlin Trachenberg'],
+        'Sachsen' => ['Chemnitz', 'Döbeln', 'Dresden', 'Leipzig', 'Riesa'],
         'Thüringen' => ['Erfurt', 'Suhl'],
-        'Sachsen' => ['Leipzig', 'Chemnitz', 'Döbeln'],
     ];
 
     foreach ($organizationUnits as $parentName => $childNames) {
@@ -132,7 +133,4 @@ test('seeds real organization units and super administrator', function () {
     $this->assertDatabaseMissing('evaluation_campaigns', [
         'title' => 'CS-101 Course Evaluation',
     ]);
-    $this->assertDatabaseMissing('organization_units', ['name' => 'Berlin']);
-    $this->assertDatabaseMissing('organization_units', ['name' => 'Dresden']);
-    $this->assertDatabaseMissing('organization_units', ['name' => 'Riesa']);
 });

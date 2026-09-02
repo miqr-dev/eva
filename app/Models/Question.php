@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'scale_max',
     'scale_min_label',
     'scale_max_label',
+    'scale_labels',
     'is_required',
     'sort_order',
 ])]
@@ -56,6 +57,7 @@ class Question extends Model
             'question_type' => QuestionType::class,
             'scale_min' => 'integer',
             'scale_max' => 'integer',
+            'scale_labels' => 'array',
             'is_required' => 'boolean',
             'sort_order' => 'integer',
         ];

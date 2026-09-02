@@ -24,6 +24,7 @@ class QuestionResource extends JsonResource
             'scale_max' => $this->scale_max,
             'scale_min_label' => $this->scale_min_label,
             'scale_max_label' => $this->scale_max_label,
+            'scale_labels' => $this->scale_labels,
             'is_required' => $this->is_required,
             'sort_order' => $this->sort_order,
             'options' => QuestionOptionResource::collection(

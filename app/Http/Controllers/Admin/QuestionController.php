@@ -109,6 +109,9 @@ class QuestionController extends Controller
             'scale_max_label' => $isScale
                 ? ($validated['scale_max_label'] ?? null)
                 : null,
+            'scale_labels' => $isScale
+                ? ($validated['scale_labels'] ?? null)
+                : null,
         ];
     }
 

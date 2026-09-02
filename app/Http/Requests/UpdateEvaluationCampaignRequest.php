@@ -8,6 +8,13 @@ use Illuminate\Validation\Rule;
 
 class UpdateEvaluationCampaignRequest extends AdminRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $this->input('ends_at'))) {
+            $this->merge(['ends_at' => "{$this->input('ends_at')} 23:59:59"]);
+        }
+    }
+
     public function rules(): array
     {
         return [

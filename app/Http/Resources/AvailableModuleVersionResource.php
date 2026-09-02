@@ -27,6 +27,10 @@ class AvailableModuleVersionResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'target_type' => $this->target_type,
+            'target_role_id' => $this->target_role_id,
+            'target_role' => new TeacherRoleResource(
+                $this->whenLoaded('targetRole'),
+            ),
             'default_language' => $this->default_language,
         ];
     }

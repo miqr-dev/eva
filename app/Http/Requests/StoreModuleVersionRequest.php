@@ -20,6 +20,7 @@ class StoreModuleVersionRequest extends AdminRequest
                 ),
             ],
             'target_type' => ['nullable', Rule::enum(ModuleTargetType::class)],
+            'target_role_id' => ['nullable', 'integer', 'exists:teacher_roles,id'],
         ];
     }
 

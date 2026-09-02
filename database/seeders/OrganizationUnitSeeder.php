@@ -55,18 +55,27 @@ class OrganizationUnitSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Thüringen',
+                'name' => 'Berlin',
                 'children' => [
-                    'Erfurt',
-                    'Suhl',
+                    'Berlin PrenzlauerPromenade',
+                    'Berlin Trachenberg',
                 ],
             ],
             [
                 'name' => 'Sachsen',
                 'children' => [
-                    'Leipzig',
                     'Chemnitz',
                     'Döbeln',
+                    'Dresden',
+                    'Leipzig',
+                    'Riesa',
+                ],
+            ],
+            [
+                'name' => 'Thüringen',
+                'children' => [
+                    'Erfurt',
+                    'Suhl',
                 ],
             ],
         ];

@@ -24,12 +24,15 @@ class QuestionnaireBuilderController extends Controller
         );
 
         $templates = QuestionnaireTemplate::query()
-            ->with('versions.moduleLinks.moduleVersion.module')
+            ->with([
+                'versions.moduleLinks.moduleVersion.module',
+                'versions.moduleLinks.moduleVersion.targetRole',
+            ])
             ->orderBy('name')
             ->get();
         $availableModuleVersions = ModuleVersion::query()
             ->where('status', 'published')
-            ->with('module')
+            ->with(['module', 'targetRole'])
             ->orderBy('title')
             ->get();
 

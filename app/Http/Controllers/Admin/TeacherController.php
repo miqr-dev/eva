@@ -19,7 +19,7 @@ class TeacherController extends Controller
         $this->authorizePermission('courses.manage');
 
         $teachers = Teacher::query()
-            ->with(['organizationUnit', 'user', 'courses'])
+            ->with(['organizationUnit', 'teacherRole', 'user', 'courses'])
             ->latest()
             ->paginate(25);
 
@@ -37,7 +37,7 @@ class TeacherController extends Controller
             return $teacher;
         });
 
-        return new TeacherResource($teacher->load(['organizationUnit', 'user', 'courses']));
+        return new TeacherResource($teacher->load(['organizationUnit', 'teacherRole', 'user', 'courses']));
     }
 
     public function show(Teacher $teacher): TeacherResource
@@ -45,7 +45,7 @@ class TeacherController extends Controller
         $this->authorizePermission('courses.manage');
 
         return new TeacherResource(
-            $teacher->load(['organizationUnit', 'user', 'courses']),
+            $teacher->load(['organizationUnit', 'teacherRole', 'user', 'courses']),
         );
     }
 
@@ -61,7 +61,7 @@ class TeacherController extends Controller
             }
         });
 
-        return new TeacherResource($teacher->load(['organizationUnit', 'user', 'courses']));
+        return new TeacherResource($teacher->load(['organizationUnit', 'teacherRole', 'user', 'courses']));
     }
 
     public function destroy(Teacher $teacher): Response

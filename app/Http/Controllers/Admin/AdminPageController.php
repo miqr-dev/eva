@@ -12,6 +12,7 @@ use App\Http\Resources\OrganizationUnitResource;
 use App\Http\Resources\QuestionnaireTemplateResource;
 use App\Http\Resources\ReportTemplateResource;
 use App\Http\Resources\TeacherResource;
+use App\Http\Resources\TeacherRoleResource;
 use App\Http\Resources\UserResource;
 use App\Models\BenchmarkGroup;
 use App\Models\Course;
@@ -25,6 +26,7 @@ use App\Models\QuestionnaireVersion;
 use App\Models\ReportTemplate;
 use App\Models\Role;
 use App\Models\Teacher;
+use App\Models\TeacherRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -41,6 +43,7 @@ class AdminPageController extends Controller
         'benutzer' => 'users.manage',
         'kurse' => 'courses.manage',
         'lehrende' => 'courses.manage',
+        'rollen' => 'courses.manage',
         'frageboegen' => 'questionnaires.manage',
         'module' => 'questionnaires.manage',
         'evaluationen' => 'campaigns.manage',
@@ -107,8 +110,17 @@ class AdminPageController extends Controller
                 $request,
                 TeacherResource::collection(
                     Teacher::query()
-                        ->with(['organizationUnit', 'user', 'courses'])
+                        ->with(['organizationUnit', 'teacherRole', 'user', 'courses'])
                         ->latest()
+                        ->get(),
+                ),
+            ),
+            'rollen' => $this->resolveCollection(
+                $request,
+                TeacherRoleResource::collection(
+                    TeacherRole::query()
+                        ->withCount('teachers')
+                        ->orderBy('name')
                         ->get(),
                 ),
             ),
@@ -253,6 +265,14 @@ class AdminPageController extends Controller
                     'value' => $course->id,
                     'label' => "{$course->code} · {$course->name}",
                     'organization_unit_id' => $course->organization_unit_id,
+                ])
+                ->all(),
+            'teacherRoles' => TeacherRole::query()
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn (TeacherRole $teacherRole): array => [
+                    'value' => $teacherRole->id,
+                    'label' => $teacherRole->name,
                 ])
                 ->all(),
             'teachers' => Teacher::query()

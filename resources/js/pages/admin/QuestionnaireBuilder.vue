@@ -20,6 +20,8 @@ type AvailableModuleVersion = {
     description: string | null;
     status: string;
     target_type: string;
+    target_role_id: number | null;
+    target_role: { id: number; name: string } | null;
     default_language: string;
 };
 
@@ -766,20 +768,6 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                         class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
                                     />
                                 </label>
-                                <label class="block">
-                                    <span
-                                        class="mb-1.5 block text-sm font-medium text-slate-700"
-                                    >
-                                        Standardsprache
-                                    </span>
-                                    <input
-                                        v-model="versionForm.default_language"
-                                        :disabled="!isDraft"
-                                        required
-                                        maxlength="10"
-                                        class="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500"
-                                    />
-                                </label>
                                 <div v-if="isDraft" class="lg:col-span-2">
                                     <button
                                         type="submit"
@@ -912,6 +900,17 @@ async function removeModule(moduleLink: ModuleLink): Promise<void> {
                                                         .target_type,
                                                 )
                                             }}
+                                            <template
+                                                v-if="
+                                                    moduleLink.module_version
+                                                        .target_role
+                                                "
+                                            >
+                                                ({{
+                                                    moduleLink.module_version
+                                                        .target_role?.name
+                                                }})
+                                            </template>
                                         </p>
                                         <p
                                             v-if="

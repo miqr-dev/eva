@@ -45,6 +45,12 @@ const navigation: NavigationItem[] = [
         icon: 'graduation-cap',
         resource: 'lehrende',
     },
+    {
+        label: 'Rollen',
+        shortLabel: 'Rollen',
+        icon: 'user-circle',
+        resource: 'rollen',
+    },
     { label: 'Kurse', shortLabel: 'Kurse', icon: 'layers', resource: 'kurse' },
     {
         label: 'Module',

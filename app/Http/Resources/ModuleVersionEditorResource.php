@@ -24,6 +24,10 @@ class ModuleVersionEditorResource extends JsonResource
             'status' => $this->status,
             'default_language' => $this->default_language,
             'target_type' => $this->target_type,
+            'target_role_id' => $this->target_role_id,
+            'target_role' => new TeacherRoleResource(
+                $this->whenLoaded('targetRole'),
+            ),
             'published_at' => $this->published_at,
             'sections' => ModuleSectionResource::collection(
                 $this->whenLoaded('sections'),

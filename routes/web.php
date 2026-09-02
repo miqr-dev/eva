@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BenchmarkGroupController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\EvaluationCampaignController;
+use App\Http\Controllers\Admin\EvaluationCampaignPreviewController;
 use App\Http\Controllers\Admin\EvaluationCampaignTanController;
 use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\ModuleController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\QuestionnaireVersionController;
 use App\Http\Controllers\Admin\QuestionnaireVersionModuleController;
 use App\Http\Controllers\Admin\ReportTemplateController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\TeacherRoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
@@ -59,12 +61,17 @@ Route::middleware('auth')->group(function (): void {
         'verwaltung/evaluationen/{evaluation_campaign}/tans',
         [EvaluationCampaignTanController::class, 'show'],
     )->name('admin.evaluation-campaigns.tans.show');
+    Route::get(
+        'verwaltung/evaluationen/{evaluation_campaign}/vorschau',
+        [EvaluationCampaignPreviewController::class, 'show'],
+    )->name('admin.evaluation-campaigns.preview.show');
     Route::get('verwaltung/{resource}', AdminPageController::class)
         ->whereIn('resource', [
             'organisationseinheiten',
             'benutzer',
             'kurse',
             'lehrende',
+            'rollen',
             'frageboegen',
             'module',
             'evaluationen',
@@ -86,6 +93,7 @@ Route::middleware('auth')
             'users' => UserController::class,
             'courses' => CourseController::class,
             'teachers' => TeacherController::class,
+            'teacher-roles' => TeacherRoleController::class,
             'questionnaire-templates' => QuestionnaireTemplateController::class,
             'modules' => ModuleController::class,
             'evaluation-campaigns' => EvaluationCampaignController::class,

@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'status',
     'default_language',
     'target_type',
+    'target_role_id',
     'created_by_id',
     'published_at',
 ])]
@@ -37,6 +38,12 @@ class ModuleVersion extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    /** @return BelongsTo<TeacherRole, $this> */
+    public function targetRole(): BelongsTo
+    {
+        return $this->belongsTo(TeacherRole::class, 'target_role_id');
     }
 
     /** @return BelongsToMany<QuestionnaireVersion, $this> */
