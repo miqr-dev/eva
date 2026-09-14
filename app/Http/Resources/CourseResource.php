@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +28,15 @@ class CourseResource extends JsonResource
                 $this->whenLoaded('organizationUnit'),
             ),
             'teachers' => TeacherResource::collection($this->whenLoaded('teachers')),
+            'teacher_assignments' => $this->whenLoaded(
+                'teachers',
+                fn () => $this->teachers
+                    ->map(fn (Teacher $teacher): array => [
+                        'teacher_id' => $teacher->id,
+                        'subject_id' => $teacher->pivot->subject_id,
+                    ])
+                    ->values(),
+            ),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
     'evaluation_campaign_id',
     'target_type',
     'target_id',
+    'subject_id',
     'label',
     'sort_order',
 ])]
@@ -27,6 +28,12 @@ class EvaluationCampaignTarget extends Model
     public function target(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /** @return BelongsTo<Subject, $this> */
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
     }
 
     /** @return HasMany<ResponseAnswer, $this> */

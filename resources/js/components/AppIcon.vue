@@ -6,6 +6,7 @@ export type IconName =
     | 'building'
     | 'users'
     | 'graduation-cap'
+    | 'book'
     | 'layers'
     | 'clipboard-list'
     | 'puzzle'
@@ -47,6 +48,10 @@ const paths: Record<IconName, string[]> = {
         'm3 9 9-4.5L21 9l-9 4.5L3 9Z',
         'M7 11.5V16c0 1.1 2.24 2 5 2s5-.9 5-2v-4.5',
         'M21 9v6',
+    ],
+    book: [
+        'M4 19.5A2.5 2.5 0 0 1 6.5 17H20',
+        'M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z',
     ],
     layers: [
         'm3 9 9-4.5L21 9l-9 4.5L3 9Z',

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Teacher;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 use LogicException;
 
 class UpdateTeacherRequest extends AdminRequest
@@ -28,9 +29,18 @@ class UpdateTeacherRequest extends AdminRequest
             'teacher_role_id' => ['nullable', 'integer', 'exists:teacher_roles,id'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
-            'course_ids' => ['sometimes', 'array'],
-            'course_ids.*' => ['integer', 'distinct', 'exists:courses,id'],
+            'is_remote' => ['sometimes', 'boolean'],
+            'course_assignments' => ['sometimes', 'array'],
+            'course_assignments.*.course_id' => ['required', 'integer', 'exists:courses,id'],
+            'course_assignments.*.subject_id' => ['nullable', 'integer', 'exists:subjects,id'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $this->ensureAssignmentsAreDistinct($validator, 'course_assignments', 'course_id');
+        });
     }
 
     protected function permission(): string

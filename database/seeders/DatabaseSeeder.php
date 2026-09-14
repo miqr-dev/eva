@@ -15,12 +15,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Fixed baseline: roles/permissions, Standorte, Lehrenden-Rollen,
-        // and the two admin users. Keep these four as-is; append any future
-        // (e.g. demo or test) seeders below rather than editing them.
+        // Lehrende, and the two admin users. Keep these five as-is; append
+        // any future (e.g. demo or test) seeders below rather than editing
+        // them. TeacherSeeder depends on OrganizationUnitSeeder and
+        // TeacherRoleSeeder having already run.
         $this->call([
             AccessControlSeeder::class,
             OrganizationUnitSeeder::class,
             TeacherRoleSeeder::class,
+            TeacherSeeder::class,
             UserSeeder::class,
         ]);
     }

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'teacher_role_id',
     'email',
     'is_active',
+    'is_remote',
 ])]
 class Teacher extends Model
 {
@@ -44,6 +45,7 @@ class Teacher extends Model
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class)
+            ->withPivot('subject_id')
             ->withTimestamps();
     }
 
@@ -57,6 +59,7 @@ class Teacher extends Model
     {
         return [
             'is_active' => 'boolean',
+            'is_remote' => 'boolean',
         ];
     }
 }

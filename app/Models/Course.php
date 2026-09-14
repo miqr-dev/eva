@@ -33,6 +33,7 @@ class Course extends Model
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class)
+            ->withPivot('subject_id')
             ->withTimestamps();
     }
 

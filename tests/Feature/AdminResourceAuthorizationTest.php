@@ -14,6 +14,7 @@ use App\Models\QuestionnaireTemplate;
 use App\Models\QuestionnaireVersion;
 use App\Models\QuestionnaireVersionModule;
 use App\Models\ReportTemplate;
+use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
 
@@ -34,6 +35,7 @@ dataset('admin resources', [
     'users' => ['admin.api.users', 'users.manage', fn () => User::factory()->create()],
     'courses' => ['admin.api.courses', 'courses.manage', fn () => Course::factory()->create()],
     'teachers' => ['admin.api.teachers', 'courses.manage', fn () => Teacher::factory()->create()],
+    'subjects' => ['admin.api.subjects', 'courses.manage', fn () => Subject::factory()->create()],
     'questionnaire templates' => ['admin.api.questionnaire-templates', 'questionnaires.manage', fn () => QuestionnaireTemplate::factory()->create()],
     'modules' => ['admin.api.modules', 'questionnaires.manage', fn () => Module::factory()->create()],
     'evaluation campaigns' => ['admin.api.evaluation-campaigns', 'campaigns.manage', fn () => EvaluationCampaign::factory()->create()],

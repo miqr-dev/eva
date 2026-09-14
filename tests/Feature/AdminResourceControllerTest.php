@@ -6,6 +6,7 @@ use App\Models\OrganizationUnit;
 use App\Models\Permission;
 use App\Models\QuestionnaireTemplate;
 use App\Models\QuestionnaireVersion;
+use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
 
@@ -48,7 +49,9 @@ test('authorized users can create a course and assign teachers', function () {
             'starts_at' => now()->toDateTimeString(),
             'ends_at' => now()->addMonths(4)->toDateTimeString(),
             'is_active' => true,
-            'teacher_ids' => [$teacher->id],
+            'teacher_assignments' => [
+                ['teacher_id' => $teacher->id, 'subject_id' => null],
+            ],
         ],
     );
 
@@ -61,6 +64,87 @@ test('authorized users can create a course and assign teachers', function () {
 
     expect($course->teachers)->toHaveCount(1)
         ->and($course->teachers->first()->is($teacher))->toBeTrue();
+});
+
+test('a teacher can be assigned to the same course twice for different subjects', function () {
+    $user = userWithPermission('courses.manage');
+    $organizationUnit = OrganizationUnit::factory()->create();
+    $teacher = Teacher::factory()->for($organizationUnit)->create();
+    $firstSubject = Subject::factory()->create(['name' => 'Werkstoffwirtschaft']);
+    $secondSubject = Subject::factory()->create(['name' => 'Büroorganisation']);
+
+    $response = $this->actingAs($user)->postJson(
+        route('admin.api.courses.store'),
+        [
+            'organization_unit_id' => $organizationUnit->id,
+            'name' => 'BW21',
+            'code' => 'BW-21',
+            'teacher_assignments' => [
+                ['teacher_id' => $teacher->id, 'subject_id' => $firstSubject->id],
+                ['teacher_id' => $teacher->id, 'subject_id' => $secondSubject->id],
+            ],
+        ],
+    );
+
+    $response->assertCreated();
+
+    $course = Course::query()->where('code', 'BW-21')->firstOrFail();
+
+    expect($course->teachers)->toHaveCount(2);
+
+    $subjectIds = $course->teachers->pluck('pivot.subject_id')->sort()->values();
+    expect($subjectIds->all())->toBe(
+        collect([$firstSubject->id, $secondSubject->id])->sort()->values()->all(),
+    );
+});
+
+test('the same course and subject cannot be assigned to a teacher twice', function () {
+    $user = userWithPermission('courses.manage');
+    $organizationUnit = OrganizationUnit::factory()->create();
+    $teacher = Teacher::factory()->for($organizationUnit)->create();
+    $subject = Subject::factory()->create();
+
+    $this->actingAs($user)->postJson(
+        route('admin.api.courses.store'),
+        [
+            'organization_unit_id' => $organizationUnit->id,
+            'name' => 'Duplicate Assignment Course',
+            'code' => 'DUP-1',
+            'teacher_assignments' => [
+                ['teacher_id' => $teacher->id, 'subject_id' => $subject->id],
+                ['teacher_id' => $teacher->id, 'subject_id' => $subject->id],
+            ],
+        ],
+    )->assertUnprocessable()
+        ->assertJsonValidationErrors('teacher_assignments.1.teacher_id');
+});
+
+test('a teacher can be assigned to two subjects within the same course from the teacher form', function () {
+    $user = userWithPermission('courses.manage');
+    $organizationUnit = OrganizationUnit::factory()->create();
+    $course = Course::factory()->for($organizationUnit)->create();
+    $firstSubject = Subject::factory()->create();
+    $secondSubject = Subject::factory()->create();
+
+    $response = $this->actingAs($user)->postJson(
+        route('admin.api.teachers.store'),
+        [
+            'organization_unit_id' => $organizationUnit->id,
+            'name' => 'Herr Hebest',
+            'course_assignments' => [
+                ['course_id' => $course->id, 'subject_id' => $firstSubject->id],
+                ['course_id' => $course->id, 'subject_id' => $secondSubject->id],
+            ],
+        ],
+    );
+
+    $response->assertCreated();
+
+    $teacher = Teacher::query()->where('name', 'Herr Hebest')->firstOrFail();
+
+    expect($teacher->courses)->toHaveCount(2);
+    expect($teacher->courses->pluck('pivot.subject_id')->sort()->values()->all())
+        ->toBe(collect([$firstSubject->id, $secondSubject->id])->sort()->values()->all());
 });
 
 test('course codes only need to be unique inside their organization unit', function () {

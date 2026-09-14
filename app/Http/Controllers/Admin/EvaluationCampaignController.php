@@ -61,6 +61,7 @@ class EvaluationCampaignController extends Controller
                 'questionnaireVersion',
                 'creator',
                 'targets.target',
+                'targets.subject',
             ]),
         );
     }

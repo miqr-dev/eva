@@ -11,6 +11,7 @@ use App\Http\Resources\ModuleResource;
 use App\Http\Resources\OrganizationUnitResource;
 use App\Http\Resources\QuestionnaireTemplateResource;
 use App\Http\Resources\ReportTemplateResource;
+use App\Http\Resources\SubjectResource;
 use App\Http\Resources\TeacherResource;
 use App\Http\Resources\TeacherRoleResource;
 use App\Http\Resources\UserResource;
@@ -25,6 +26,7 @@ use App\Models\QuestionnaireTemplate;
 use App\Models\QuestionnaireVersion;
 use App\Models\ReportTemplate;
 use App\Models\Role;
+use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherRole;
 use App\Models\User;
@@ -43,6 +45,7 @@ class AdminPageController extends Controller
         'benutzer' => 'users.manage',
         'kurse' => 'courses.manage',
         'lehrende' => 'courses.manage',
+        'faecher' => 'courses.manage',
         'rollen' => 'courses.manage',
         'frageboegen' => 'questionnaires.manage',
         'module' => 'questionnaires.manage',
@@ -112,6 +115,14 @@ class AdminPageController extends Controller
                     Teacher::query()
                         ->with(['organizationUnit', 'teacherRole', 'user', 'courses'])
                         ->latest()
+                        ->get(),
+                ),
+            ),
+            'faecher' => $this->resolveCollection(
+                $request,
+                SubjectResource::collection(
+                    Subject::query()
+                        ->orderBy('name')
                         ->get(),
                 ),
             ),
@@ -281,6 +292,14 @@ class AdminPageController extends Controller
                 ->map(fn (Teacher $teacher): array => [
                     'value' => $teacher->id,
                     'label' => $teacher->name,
+                ])
+                ->all(),
+            'subjects' => Subject::query()
+                ->orderBy('name')
+                ->get(['id', 'name', 'code'])
+                ->map(fn (Subject $subject): array => [
+                    'value' => $subject->id,
+                    'label' => $subject->code ? "{$subject->code} · {$subject->name}" : $subject->name,
                 ])
                 ->all(),
             'questionnaireVersions' => QuestionnaireVersion::query()

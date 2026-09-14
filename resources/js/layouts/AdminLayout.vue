@@ -51,6 +51,12 @@ const navigation: NavigationItem[] = [
         icon: 'user-circle',
         resource: 'rollen',
     },
+    {
+        label: 'Fächer',
+        shortLabel: 'Fächer',
+        icon: 'book',
+        resource: 'faecher',
+    },
     { label: 'Kurse', shortLabel: 'Kurse', icon: 'layers', resource: 'kurse' },
     {
         label: 'Module',

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\QuestionnaireTemplateController;
 use App\Http\Controllers\Admin\QuestionnaireVersionController;
 use App\Http\Controllers\Admin\QuestionnaireVersionModuleController;
 use App\Http\Controllers\Admin\ReportTemplateController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\TeacherRoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -71,6 +72,7 @@ Route::middleware('auth')->group(function (): void {
             'benutzer',
             'kurse',
             'lehrende',
+            'faecher',
             'rollen',
             'frageboegen',
             'module',
@@ -94,6 +96,7 @@ Route::middleware('auth')
             'courses' => CourseController::class,
             'teachers' => TeacherController::class,
             'teacher-roles' => TeacherRoleController::class,
+            'subjects' => SubjectController::class,
             'questionnaire-templates' => QuestionnaireTemplateController::class,
             'modules' => ModuleController::class,
             'evaluation-campaigns' => EvaluationCampaignController::class,

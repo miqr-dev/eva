@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
 use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
+use App\Services\CourseTeacherAssignmentSyncService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TeacherController extends Controller
 {
+    public function __construct(
+        private readonly CourseTeacherAssignmentSyncService $assignmentSyncService,
+    ) {}
+
     public function index(): AnonymousResourceCollection
     {
         $this->authorizePermission('courses.manage');
@@ -31,8 +36,11 @@ class TeacherController extends Controller
         $validated = $request->validated();
 
         $teacher = DB::transaction(function () use ($validated): Teacher {
-            $teacher = Teacher::query()->create(Arr::except($validated, 'course_ids'));
-            $teacher->courses()->sync($validated['course_ids'] ?? []);
+            $teacher = Teacher::query()->create(Arr::except($validated, 'course_assignments'));
+            $this->assignmentSyncService->syncForTeacher(
+                $teacher,
+                $validated['course_assignments'] ?? [],
+            );
 
             return $teacher;
         });
@@ -54,10 +62,13 @@ class TeacherController extends Controller
         $validated = $request->validated();
 
         DB::transaction(function () use ($teacher, $validated): void {
-            $teacher->update(Arr::except($validated, 'course_ids'));
+            $teacher->update(Arr::except($validated, 'course_assignments'));
 
-            if (array_key_exists('course_ids', $validated)) {
-                $teacher->courses()->sync($validated['course_ids']);
+            if (array_key_exists('course_assignments', $validated)) {
+                $this->assignmentSyncService->syncForTeacher(
+                    $teacher,
+                    $validated['course_assignments'],
+                );
             }
         });
 

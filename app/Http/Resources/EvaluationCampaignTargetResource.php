@@ -19,6 +19,8 @@ class EvaluationCampaignTargetResource extends JsonResource
             'id' => $this->id,
             'target_type' => $this->target_type,
             'target_id' => $this->target_id,
+            'subject_id' => $this->subject_id,
+            'subject' => new SubjectResource($this->whenLoaded('subject')),
             'label' => $this->label,
             'sort_order' => $this->sort_order,
         ];

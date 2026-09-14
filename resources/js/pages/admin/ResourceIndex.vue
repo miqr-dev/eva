@@ -12,6 +12,7 @@ import modules from '@/routes/admin/api/modules';
 import organizationUnits from '@/routes/admin/api/organization-units';
 import questionnaireTemplates from '@/routes/admin/api/questionnaire-templates';
 import reportTemplates from '@/routes/admin/api/report-templates';
+import subjects from '@/routes/admin/api/subjects';
 import teacherRoles from '@/routes/admin/api/teacher-roles';
 import teachers from '@/routes/admin/api/teachers';
 import users from '@/routes/admin/api/users';
@@ -26,6 +27,7 @@ type ResourceKey =
     | 'benutzer'
     | 'kurse'
     | 'lehrende'
+    | 'faecher'
     | 'rollen'
     | 'frageboegen'
     | 'module'
@@ -64,10 +66,17 @@ type PageOptions = {
     courses: CourseOption[];
     teacherRoles: Option[];
     teachers: Option[];
+    subjects: Option[];
     questionnaireVersions: Option[];
 };
 
-type FormValue = string | number | boolean | number[] | null;
+type AssignmentRow = {
+    course_id?: number | null;
+    teacher_id?: number | null;
+    subject_id: number | null;
+};
+
+type FormValue = string | number | boolean | number[] | AssignmentRow[] | null;
 type FormPayload = Record<string, FormValue>;
 
 type FieldDefinition = {
@@ -83,9 +92,11 @@ type FieldDefinition = {
         | 'multiselect'
         | 'checkbox'
         | 'date'
-        | 'datetime-local';
+        | 'datetime-local'
+        | 'assignment-list';
     options?: OptionEntry[];
     optionsKey?: keyof PageOptions;
+    assignmentKey?: 'course_id' | 'teacher_id';
     placeholder?: string;
     default?: FormValue;
     nullable?: boolean;
@@ -285,12 +296,13 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 nullable: true,
             },
             {
-                name: 'teacher_ids',
+                name: 'teacher_assignments',
                 label: 'Lehrende',
-                type: 'multiselect',
+                type: 'assignment-list',
                 optionsKey: 'teachers',
+                assignmentKey: 'teacher_id',
                 default: [],
-                help: 'Mehrfachauswahl mit Strg.',
+                help: 'Fach optional angeben, wenn eine Lehrperson in diesem Kurs mehrere Fächer unterrichtet und getrennt evaluiert werden soll.',
             },
             {
                 name: 'is_active',
@@ -311,6 +323,11 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
             { label: 'Rolle', path: 'teacher_role.name' },
             { label: 'E-Mail-Adresse', path: 'email' },
             { label: 'Standort', path: 'organization_unit.name' },
+            {
+                label: 'Online/standortübergreifend',
+                path: 'is_remote',
+                format: 'boolean',
+            },
             { label: 'Kurse', path: 'courses', format: 'list' },
             { label: 'Aktiv', path: 'is_active', format: 'boolean' },
         ],
@@ -340,14 +357,23 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
                 optionsKey: 'organizationUnits',
                 required: true,
                 placeholder: 'Standort wählen',
+                help: 'Heimatstandort – Kurse an anderen Standorten sind separat über "Kurse" möglich.',
             },
             {
-                name: 'course_ids',
+                name: 'is_remote',
+                label: 'Unterrichtet online/standortübergreifend',
+                type: 'checkbox',
+                default: false,
+                help: 'Zusätzlich zum Heimatstandort, z. B. Online-Unterricht oder Kurse an weiteren Standorten.',
+            },
+            {
+                name: 'course_assignments',
                 label: 'Kurse',
-                type: 'multiselect',
+                type: 'assignment-list',
                 optionsKey: 'courses',
+                assignmentKey: 'course_id',
                 default: [],
-                help: 'Mehrfachauswahl mit Strg.',
+                help: 'Fach optional angeben, wenn diese Lehrperson im selben Kurs mehrere Fächer unterrichtet und getrennt evaluiert werden soll.',
             },
             {
                 name: 'is_active',
@@ -368,6 +394,28 @@ const definitions: Record<ResourceKey, ResourceDefinition> = {
             { label: 'Lehrende', path: 'teachers_count' },
         ],
         fields: [{ name: 'name', label: 'Name', type: 'text', required: true }],
+    },
+    faecher: {
+        title: 'Fächer',
+        singular: 'Fach',
+        description:
+            'Fächer pflegen, die Lehrenden je Kurs zugeordnet werden können.',
+        api: subjects,
+        columns: [
+            { label: 'Name', path: 'name' },
+            { label: 'Code', path: 'code' },
+            { label: 'Aktiv', path: 'is_active', format: 'boolean' },
+        ],
+        fields: [
+            { name: 'name', label: 'Name', type: 'text', required: true },
+            { name: 'code', label: 'Code', type: 'text', nullable: true },
+            {
+                name: 'is_active',
+                label: 'Fach ist aktiv',
+                type: 'checkbox',
+                default: true,
+            },
+        ],
     },
     frageboegen: {
         title: 'Fragebögen',
@@ -657,7 +705,8 @@ watch(
 );
 
 watch(
-    () => (props.resourceKey === 'evaluationen' ? form.organization_unit_id : null),
+    () =>
+        props.resourceKey === 'evaluationen' ? form.organization_unit_id : null,
     (organizationUnitId, previousOrganizationUnitId) => {
         if (
             isPreparingForm ||
@@ -682,10 +731,7 @@ watch(
 );
 
 function fieldOptions(field: FieldDefinition): OptionEntry[] {
-    if (
-        props.resourceKey === 'evaluationen' &&
-        field.name === 'course_id'
-    ) {
+    if (props.resourceKey === 'evaluationen' && field.name === 'course_id') {
         const organizationUnitId = form.organization_unit_id;
 
         return organizationUnitId
@@ -711,6 +757,36 @@ function optionKey(option: OptionEntry): number | string {
     return isOptionGroup(option) ? `group-${option.label}` : option.value;
 }
 
+function assignmentRows(field: FieldDefinition): AssignmentRow[] {
+    const value = form[field.name];
+
+    return Array.isArray(value) ? (value as AssignmentRow[]) : [];
+}
+
+function addAssignmentRow(field: FieldDefinition): void {
+    form[field.name] = [...assignmentRows(field), { subject_id: null }];
+}
+
+function removeAssignmentRow(field: FieldDefinition, index: number): void {
+    form[field.name] = assignmentRows(field).filter(
+        (_, rowIndex) => rowIndex !== index,
+    );
+}
+
+function updateAssignmentRow(
+    field: FieldDefinition,
+    index: number,
+    key: 'course_id' | 'teacher_id' | 'subject_id',
+    rawValue: string,
+): void {
+    const value = rawValue === '' ? null : Number(rawValue);
+    const rows = assignmentRows(field).map((row, rowIndex) =>
+        rowIndex === index ? { ...row, [key]: value } : row,
+    );
+
+    form[field.name] = rows;
+}
+
 function relationIds(record: DataRecord, relation: string): number[] {
     const value = record[relation];
 
@@ -733,11 +809,11 @@ function valueForField(field: FieldDefinition, record?: DataRecord): FormValue {
     if (!record) {
         if (field.default !== undefined) {
             return Array.isArray(field.default)
-                ? [...field.default]
+                ? ([...field.default] as FormValue)
                 : field.default;
         }
 
-        if (field.type === 'multiselect') {
+        if (field.type === 'multiselect' || field.type === 'assignment-list') {
             return [];
         }
 
@@ -748,11 +824,15 @@ function valueForField(field: FieldDefinition, record?: DataRecord): FormValue {
         return field.nullable || field.type === 'select' ? null : '';
     }
 
+    if (field.type === 'assignment-list') {
+        const rows = record[field.name];
+
+        return Array.isArray(rows) ? (rows as AssignmentRow[]) : [];
+    }
+
     const relationFields: Record<string, string> = {
         role_ids: 'roles',
         permission_ids: 'permissions',
-        teacher_ids: 'teachers',
-        course_ids: 'courses',
     };
 
     if (relationFields[field.name]) {
@@ -1400,6 +1480,86 @@ function isSelf(record: DataRecord): boolean {
                                 </option>
                             </template>
                         </select>
+
+                        <div
+                            v-else-if="field.type === 'assignment-list'"
+                            class="space-y-2"
+                        >
+                            <div
+                                v-for="(row, index) in assignmentRows(field)"
+                                :key="index"
+                                class="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 p-3"
+                            >
+                                <select
+                                    :value="row[field.assignmentKey!] ?? ''"
+                                    required
+                                    class="h-10 min-w-[10rem] flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                                    @change="
+                                        updateAssignmentRow(
+                                            field,
+                                            index,
+                                            field.assignmentKey!,
+                                            ($event.target as HTMLSelectElement)
+                                                .value,
+                                        )
+                                    "
+                                >
+                                    <option value="" disabled>
+                                        Bitte auswählen
+                                    </option>
+                                    <option
+                                        v-for="option in fieldOptions(
+                                            field,
+                                        ) as Option[]"
+                                        :key="option.value"
+                                        :value="option.value"
+                                    >
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+
+                                <select
+                                    :value="row.subject_id ?? ''"
+                                    class="h-10 min-w-[10rem] flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm transition outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100"
+                                    @change="
+                                        updateAssignmentRow(
+                                            field,
+                                            index,
+                                            'subject_id',
+                                            ($event.target as HTMLSelectElement)
+                                                .value,
+                                        )
+                                    "
+                                >
+                                    <option value="">
+                                        Kein bestimmtes Fach
+                                    </option>
+                                    <option
+                                        v-for="subjectOption in options.subjects"
+                                        :key="subjectOption.value"
+                                        :value="subjectOption.value"
+                                    >
+                                        {{ subjectOption.label }}
+                                    </option>
+                                </select>
+
+                                <button
+                                    type="button"
+                                    class="h-10 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                                    @click="removeAssignmentRow(field, index)"
+                                >
+                                    Entfernen
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="h-10 rounded-lg border border-dashed border-slate-300 px-4 text-sm font-medium text-teal-700 transition hover:bg-teal-50"
+                                @click="addAssignmentRow(field)"
+                            >
+                                + Zuordnung hinzufügen
+                            </button>
+                        </div>
 
                         <input
                             v-else

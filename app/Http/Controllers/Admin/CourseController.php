@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Services\CourseTeacherAssignmentSyncService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CourseController extends Controller
 {
+    public function __construct(
+        private readonly CourseTeacherAssignmentSyncService $assignmentSyncService,
+    ) {}
+
     public function index(): AnonymousResourceCollection
     {
         $this->authorizePermission('courses.manage');
@@ -31,8 +36,11 @@ class CourseController extends Controller
         $validated = $request->validated();
 
         $course = DB::transaction(function () use ($validated): Course {
-            $course = Course::query()->create(Arr::except($validated, 'teacher_ids'));
-            $course->teachers()->sync($validated['teacher_ids'] ?? []);
+            $course = Course::query()->create(Arr::except($validated, 'teacher_assignments'));
+            $this->assignmentSyncService->syncForCourse(
+                $course,
+                $validated['teacher_assignments'] ?? [],
+            );
 
             return $course;
         });
@@ -54,10 +62,13 @@ class CourseController extends Controller
         $validated = $request->validated();
 
         DB::transaction(function () use ($course, $validated): void {
-            $course->update(Arr::except($validated, 'teacher_ids'));
+            $course->update(Arr::except($validated, 'teacher_assignments'));
 
-            if (array_key_exists('teacher_ids', $validated)) {
-                $course->teachers()->sync($validated['teacher_ids']);
+            if (array_key_exists('teacher_assignments', $validated)) {
+                $this->assignmentSyncService->syncForCourse(
+                    $course,
+                    $validated['teacher_assignments'],
+                );
             }
         });
 
